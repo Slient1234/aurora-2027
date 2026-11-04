@@ -1,0 +1,2977 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>極光行 提案 2027</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Raleway:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root {
+  --bg:       #f2f5f9;
+  --surface:  #ffffff;
+  --surface2: #f8fafc;
+  --border:   #e2e8f0;
+  --border2:  #cbd5e1;
+  --text:     #1e293b;
+  --sub:      #334155;
+  --muted:    #64748b;
+  --muted2:   #94a3b8;
+
+  /* Aurora palette */
+  --au-blue:   #0ea5e9;
+  --au-teal:   #14b8a6;
+  --au-green:  #10b981;
+  --au-violet: #8b5cf6;
+  --au-pink:   #ec4899;
+  --au-amber:  #f59e0b;
+
+  /* Country accent colors */
+  --no: #0284c7;   --no-bg: #f0f9ff;   --no-border: #bae6fd;
+  --se: #6366f1;   --se-bg: #eef2ff;   --se-border: #c7d2fe;
+  --fi: #059669;   --fi-bg: #ecfdf5;   --fi-border: #a7f3d0;
+  --is: #7c3aed;   --is-bg: #f5f3ff;   --is-border: #ddd6fe;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', 'Noto Sans TC', 'Microsoft JhengHei', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── Views ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ══════════════════════════════════════
+   HOME
+══════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, #0c1a3a 0%, #0f3460 40%, #16213e 70%, #0d1b2a 100%);
+  padding: 32px 24px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 60% at 70% 50%, rgba(14,165,233,0.18) 0%, transparent 70%),
+              radial-gradient(ellipse 80% 80% at 20% 80%, rgba(139,92,246,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 40% at 50% 10%, rgba(16,185,129,0.10) 0%, transparent 60%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; }
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--au-teal);
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 52px;
+  font-weight: 400;
+  background: linear-gradient(120deg, #e0f2fe 0%, #7dd3fc 35%, #5eead4 65%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 10px;
+  line-height: 1.05;
+}
+.hero-title span { -webkit-text-fill-color: #34d399; color: #34d399; }
+.hero-sub {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 8px;
+  line-height: 1.7;
+}
+.hero-tags {
+  display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap;
+}
+.htag {
+  font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid;
+}
+.htag-blue  { color: var(--au-blue);   background: rgba(14,165,233,0.12);  border-color: rgba(14,165,233,0.3); }
+.htag-green { color: var(--au-green);  background: rgba(16,185,129,0.12);  border-color: rgba(16,185,129,0.3); }
+.htag-v     { color: var(--au-violet); background: rgba(139,92,246,0.12);  border-color: rgba(139,92,246,0.3); }
+
+/* ── Overview section ── */
+.section-wrap { padding: 16px 16px 0; }
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+
+/* ── Comparison bar ── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.cmp-card {
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.cmp-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.10); }
+.cmp-card.focused { border-width: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.cmp-card-no { border-color: var(--no-border); }
+.cmp-card-se { border-color: var(--se-border); }
+.cmp-card-fi { border-color: var(--fi-border); }
+.cmp-card-is { border-color: var(--is-border); }
+
+.cmp-header {
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.cmp-card-no .cmp-header { background: var(--no-bg); }
+.cmp-card-se .cmp-header { background: var(--se-bg); }
+.cmp-card-fi .cmp-header { background: var(--fi-bg); }
+.cmp-card-is .cmp-header { background: var(--is-bg); }
+
+.cmp-flag { font-size: 20px; margin-bottom: 4px; }
+.cmp-name { font-size: 13px; font-weight: 700; }
+.cmp-name-en { font-size: 10px; color: var(--muted); font-weight: 400; }
+.focused-badge {
+  display: inline-block;
+  font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 10px; margin-top: 4px; color: white;
+  background: var(--no);
+}
+
+.cmp-body { padding: 10px 12px 12px; }
+.cmp-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; margin-bottom: 5px;
+}
+.cmp-row:last-child { margin-bottom: 0; }
+.cmp-row-label { color: var(--muted); }
+.cmp-row-val { font-weight: 700; font-size: 11px; }
+.cmp-card-no .cmp-row-val { color: var(--no); }
+.cmp-card-se .cmp-row-val { color: var(--se); }
+.cmp-card-fi .cmp-row-val { color: var(--fi); }
+.cmp-card-is .cmp-row-val { color: var(--is); }
+
+.aurora-dots { display: flex; gap: 2px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); }
+.dot.on-no { background: var(--no); }
+.dot.on-se { background: var(--se); }
+.dot.on-fi { background: var(--fi); }
+.dot.on-is { background: var(--is); }
+
+/* ── Decision axis ── */
+.axis-card {
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.axis-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--sub); }
+.axis-row {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.axis-row:last-child { margin-bottom: 0; }
+.axis-q { font-size: 12px; color: var(--muted); width: 100px; flex-shrink: 0; }
+.axis-bar { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.axis-fill { height: 100%; border-radius: 3px; }
+.fill-no { background: linear-gradient(90deg, var(--au-blue), var(--au-teal)); }
+.fill-se { background: var(--se); }
+.fill-fi { background: var(--fi); }
+.fill-is { background: linear-gradient(90deg, var(--au-violet), var(--au-pink)); }
+.axis-label { font-size: 11px; font-weight: 700; width: 28px; text-align: right; }
+
+/* ── Key question ── */
+.kq-card {
+  background: linear-gradient(135deg, #f0f9ff, #f5f3ff);
+  border: 1.5px solid #bae6fd;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.kq-title { font-size: 12px; font-weight: 700; color: var(--no); margin-bottom: 8px; letter-spacing: 0.5px; }
+.kq-item {
+  font-size: 12px; color: var(--sub); padding: 4px 0;
+  border-bottom: 1px solid rgba(14,165,233,0.12);
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.kq-item:last-child { border-bottom: none; }
+.kq-dot { color: var(--au-blue); font-size: 14px; line-height: 1.4; flex-shrink: 0; }
+
+/* ══════════════════════════════════════
+   DETAIL PAGES
+══════════════════════════════════════ */
+.page-header {
+  background: var(--surface);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10;
+}
+.btn-back {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 16px; width: 32px; height: 32px;
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.btn-back:hover { background: var(--border); color: var(--text); }
+.page-flag { font-size: 20px; }
+.page-title { font-size: 16px; font-weight: 700; }
+.page-sub { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+.detail-body { padding: 14px 16px; }
+.detail-body-narrow { max-width: 720px; }
+.two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.two-col-grid .ana-block { margin-bottom: 0; }
+
+/* Hero strip per country */
+.country-hero {
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.ch-no { background: var(--no-bg); border: 1.5px solid var(--no-border); }
+.ch-se { background: var(--se-bg); border: 1.5px solid var(--se-border); }
+.ch-fi { background: var(--fi-bg); border: 1.5px solid var(--fi-border); }
+.ch-is { background: var(--is-bg); border: 1.5px solid var(--is-border); }
+
+.ch-stat { flex: 1; min-width: 80px; }
+.ch-stat-val { font-size: 22px; font-weight: 900; line-height: 1; }
+.ch-no .ch-stat-val { color: var(--no); }
+.ch-se .ch-stat-val { color: var(--se); }
+.ch-fi .ch-stat-val { color: var(--fi); }
+.ch-is .ch-stat-val { color: var(--is); }
+.ch-stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* Analysis sections */
+.ana-block {
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.ana-head {
+  padding: 11px 14px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2);
+}
+.ana-body { padding: 12px 14px; }
+.ana-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+}
+.ana-row:last-child { border-bottom: none; padding-bottom: 0; }
+.ana-row-icon { font-size: 15px; flex-shrink: 0; line-height: 1.5; }
+.ana-row-main { flex: 1; }
+.ana-row-name { font-weight: 700; color: var(--text); line-height: 1.4; }
+.ana-row-note { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.ana-row-tag {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+  flex-shrink: 0; align-self: center;
+}
+.tag-must  { background: #fef3c7; color: #92400e; }
+.tag-book  { background: #dcfce7; color: #166534; }
+.tag-opt   { background: #f1f5f9; color: var(--muted); }
+.tag-warn  { background: #fee2e2; color: #991b1b; }
+.tag-info  { background: #eff6ff; color: #1d4ed8; }
+
+/* Route cards */
+.route-card {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+.route-card:last-child { margin-bottom: 0; }
+.route-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.route-flow {
+  display: flex; align-items: center; gap: 4px;
+  flex-wrap: wrap; font-size: 12px; color: var(--sub); margin-bottom: 6px;
+}
+.rf-node {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 700; font-size: 11px;
+  white-space: nowrap;
+}
+.rf-arr { color: var(--muted2); font-size: 12px; }
+.route-note { font-size: 11px; color: var(--muted); line-height: 1.6; }
+.route-tag {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px; margin-left: 6px;
+}
+.route-tag.rec { background: #dcfce7; color: #166534; }
+.route-tag.alt { background: #f1f5f9; color: var(--muted); }
+
+/* Pros/cons */
+.pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pc-block { border-radius: 8px; padding: 10px 12px; }
+.pc-block.pros { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.pc-block.cons { background: #fff7f7; border: 1px solid #fecaca; }
+.pc-title { font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+.pc-block.pros .pc-title { color: #166534; }
+.pc-block.cons .pc-title { color: #991b1b; }
+.pc-item { font-size: 11px; color: var(--sub); padding: 2px 0; display: flex; gap: 5px; }
+.pc-item::before { flex-shrink: 0; }
+.pc-block.pros .pc-item::before { content: '✓'; color: #16a34a; }
+.pc-block.cons .pc-item::before { content: '✗'; color: #dc2626; }
+
+/* Feasibility bar */
+.feasibility {
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.fea-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.fea-row { margin-bottom: 8px; }
+.fea-label { font-size: 12px; color: var(--sub); margin-bottom: 4px; display: flex; justify-content: space-between; }
+.fea-bar { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.fea-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--au-blue), var(--au-teal)); }
+
+/* ── Nordic Map ── */
+.map-wrap {
+  padding: 0 16px 0;
+  margin-bottom: 4px;
+}
+.map-container {
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.map-title {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(148,163,184,0.55); white-space: nowrap; pointer-events: none;
+}
+.nordic-svg {
+  width: 100%; height: auto; display: block;
+}
+.country-node {
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.country-node:hover {
+  filter: brightness(1.25) drop-shadow(0 0 10px rgba(255,255,255,0.35));
+}
+.country-node.active-country {
+  filter: brightness(1.3) drop-shadow(0 0 14px rgba(255,255,255,0.4));
+}
+.map-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 700;
+  fill: rgba(255,255,255,0.92);
+  pointer-events: none;
+  text-anchor: middle;
+}
+.map-label-en {
+  font-size: 8px; font-weight: 400;
+  fill: rgba(255,255,255,0.65);
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+/* Tooltip */
+.map-tooltip {
+  position: fixed;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  min-width: 195px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.15s;
+}
+.map-tooltip.hidden { opacity: 0; }
+.tt-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.tt-flag { font-size: 20px; }
+.tt-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.tt-name-en { font-size: 10px; color: var(--muted); font-weight: 400; }
+.tt-row { font-size: 11px; color: var(--muted); margin-bottom: 3px; display: flex; gap: 5px; }
+.tt-row strong { color: var(--sub); }
+.tt-highlight { font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 6px; margin-top: 4px; line-height: 1.5; }
+.tt-btn {
+  margin-top: 8px; width: 100%;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 7px; padding: 6px;
+  font-size: 11px; font-weight: 700; color: var(--au-blue);
+  cursor: pointer; transition: background 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.tt-btn:hover { background: #e0f0ff; }
+
+/* ── Region activity block ── */
+.region-block {
+  background: var(--surface); border-radius: 10px;
+  border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden;
+}
+.region-head {
+  padding: 10px 14px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border); background: var(--surface2);
+}
+.region-head-flag { font-size: 16px; }
+.region-head-info { flex: 1; }
+.region-head-name { font-size: 13px; font-weight: 700; }
+.region-head-sub  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+.region-nights { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: var(--no-bg); color: var(--no); }
+
+.act-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 14px; border-bottom: 1px solid #f1f5f9; font-size: 13px;
+}
+.act-row:last-child { border-bottom: none; }
+.act-icon { font-size: 15px; flex-shrink: 0; line-height: 1.5; }
+.act-main { flex: 1; min-width: 0; }
+.act-name { font-weight: 700; color: var(--text); line-height: 1.4; }
+.act-note { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.act-meta { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.act-time { font-size: 10px; color: var(--muted2); background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 1px 7px; }
+.act-cost { font-size: 10px; color: #0369a1; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 1px 7px; }
+.act-link { font-size: 10px; color: #0369a1; text-decoration: none; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 8px; padding: 1px 7px; white-space: nowrap; transition: 0.15s; }
+.act-link:hover { background: #bae6fd; }
+.act-link.official { color: #166534; background: #f0fdf4; border-color: #bbf7d0; }
+.act-link.official:hover { background: #dcfce7; }
+.act-tag {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; flex-shrink: 0; align-self: flex-start; margin-top: 2px;
+}
+
+/* Food row */
+.food-section { padding: 10px 14px; background: #fffbf0; border-top: 1px solid #fef3c7; }
+.food-title { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #92400e; margin-bottom: 6px; }
+.food-items { display: flex; gap: 6px; flex-wrap: wrap; }
+.food-chip {
+  font-size: 11px; padding: 3px 9px; border-radius: 20px;
+  background: #fef3c7; color: #78350f; border: 1px solid #fde68a;
+}
+
+/* 三欄地區並排 */
+.regions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.regions-grid .region-block { margin-bottom: 0; }
+
+/* Toggle expand */
+.expand-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 12px; color: var(--au-blue);
+  font-weight: 700; padding: 6px 0; display: block; margin-top: 4px;
+}
+.expandable { display: none; }
+.expandable.open { display: block; }
+
+/* ── Embedded route map ── */
+.embed-map-wrap {
+  margin: 14px 16px 0;
+  border-radius: 14px 14px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-bottom: none;
+}
+#embed-map {
+  width: 100%;
+  height: 300px;
+}
+.embed-map-bar {
+  margin: 0 16px 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+}
+.em-tabs {
+  display: flex; gap: 3px; flex: 1; overflow-x: auto;
+  scrollbar-width: none;
+}
+.em-tabs::-webkit-scrollbar { display: none; }
+.em-tab {
+  font-size: 11px; font-weight: 700;
+  color: var(--muted);
+  background: none; border: 1px solid transparent;
+  border-radius: 6px; padding: 3px 8px;
+  cursor: pointer; white-space: nowrap; transition: 0.15s;
+}
+.em-tab:hover { color: var(--text); }
+.em-tab.active {
+  color: var(--au-blue);
+  background: rgba(14,165,233,0.12);
+  border-color: rgba(14,165,233,0.3);
+}
+.em-link {
+  font-size: 11px; font-weight: 700; color: #38bdf8;
+  cursor: pointer; padding: 3px 9px; border-radius: 6px;
+  background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.25);
+  transition: background 0.15s; white-space: nowrap;
+  margin-left: auto;
+}
+.em-link:hover { background: rgba(14,165,233,0.28); }
+
+/* ── Itinerary Node Graph v2 ── */
+#itin-flow { padding: 12px 16px 8px; }
+.itin-summary-bar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+  margin-bottom: 12px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 7px 12px; font-size: 10px; font-weight: 700; color: var(--muted);
+}
+.isb-total { margin-left: auto; color: var(--no); font-size: 12px; font-weight: 800; }
+.itin-hist-btn {
+  width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); font-size: 13px; cursor: pointer; transition: 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.itin-hist-btn:hover:not(:disabled) { border-color: var(--au-blue); color: var(--au-blue); }
+.itin-hist-btn:disabled { opacity: 0.3; cursor: default; }
+/* Phase row: left + right in one card */
+.ig-row {
+  display: flex; border-radius: 12px; overflow: hidden;
+  border: 1.5px solid var(--igb);
+}
+.ig-left {
+  width: 140px; flex-shrink: 0; border-right: 1.5px solid var(--igb);
+  background: var(--igl); padding: 11px 10px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.ig-right { flex: 1; min-width: 0; padding: 8px 10px; display: flex; flex-direction: column; }
+/* Phase left elements */
+.ign-emoji { font-size: 20px; line-height: 1; }
+.ign-name {
+  font-size: 13px; font-weight: 800; color: var(--text);
+  background: none; border: none; border-bottom: 1px solid transparent;
+  outline: none; width: 100%; font-family: inherit; padding: 0; cursor: text;
+}
+.ign-name:focus { border-bottom-color: var(--nc); }
+.ign-dates { font-size: 9px; color: var(--muted); line-height: 1.4; }
+.ign-nights { display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+.ign-nb {
+  width: 17px; height: 17px; border-radius: 50%; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); font-size: 13px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; line-height: 1; transition: 0.15s;
+}
+.ign-nb:hover { border-color: var(--nc); color: var(--nc); }
+.ign-nv { font-size: 12px; font-weight: 800; color: var(--nc); min-width: 14px; text-align: center; }
+.ign-del {
+  margin-top: 3px; align-self: flex-start; padding: 1px 7px; font-size: 10px;
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+  color: #ef4444; border-radius: 6px; cursor: pointer; transition: 0.15s; line-height: 1.5;
+}
+.ign-del:hover { background: rgba(239,68,68,0.18); }
+/* Edge between rows */
+.ig-edge-row { display: flex; }
+.ig-er-l {
+  width: 140px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; padding: 0 10px;
+}
+.ig-er-r { flex: 1; display: flex; align-items: center; padding: 0 10px; gap: 6px; }
+.ie2-line { width: 2px; height: 9px; background: var(--border); }
+.ie2-badge {
+  display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+  border: 1px solid color-mix(in srgb,var(--cc) 35%,transparent);
+  background: color-mix(in srgb,var(--cc) 10%,var(--surface));
+  color: var(--cc); white-space: nowrap; transition: 0.15s;
+}
+.ie2-badge:hover { background: color-mix(in srgb,var(--cc) 22%,var(--surface)); }
+.ie2-time {
+  font-size: 10px; color: var(--muted); background: none; border: none; outline: none;
+  flex: 1; font-family: inherit; min-width: 0; padding: 0;
+}
+.ie2-add {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-left: auto;
+  background: rgba(14,165,233,0.07); border: 1.5px dashed rgba(14,165,233,0.35);
+  color: var(--au-blue); font-size: 14px; cursor: pointer; transition: 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.ie2-add:hover { background: rgba(14,165,233,0.18); }
+/* Day list (right column) */
+.ig-day { padding: 4px 0 2px; }
+.ig-day + .ig-day { border-top: 1px solid var(--border); padding-top: 6px; margin-top: 2px; }
+.igd-hd {
+  font-size: 9px; font-weight: 800; color: var(--muted); letter-spacing: 0.3px;
+  margin-bottom: 4px; display: flex; align-items: center; gap: 4px;
+}
+/* Horizontal activity chain */
+.igd-acts { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.igd-act-node {
+  display: inline-flex; align-items: center; gap: 3px;
+  background: color-mix(in srgb,var(--nc) 8%,var(--surface));
+  border: 1px solid color-mix(in srgb,var(--nc) 22%,var(--border));
+  border-radius: 8px; padding: 3px 7px; min-width: 0;
+}
+/* Grid-mirror auto-sizer: ::after mirrors value, input sits on top */
+.igd-act-sizer {
+  display: inline-grid; min-width: 32px;
+}
+.igd-act-sizer::after {
+  content: attr(data-val) '\00a0'; /* trailing nbsp prevents collapse on empty */
+  visibility: hidden; white-space: pre;
+  grid-area: 1 / 1;
+  font-size: 11px; font-weight: 600; font-family: inherit; padding: 0;
+}
+.igd-act-inp {
+  grid-area: 1 / 1; min-width: 32px; width: 100%;
+  font-size: 11px; font-weight: 600; color: var(--text); font-family: inherit;
+  background: none; border: none; outline: none;
+}
+.igd-act-inp::placeholder { color: var(--muted); opacity: 0.55; }
+.igd-act-del {
+  width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.15);
+  color: #ef4444; font-size: 8px; cursor: pointer; transition: 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.igd-act-del:hover { background: rgba(239,68,68,0.2); }
+.igd-act-arrow { font-size: 11px; color: var(--muted); opacity: 0.45; flex-shrink: 0; }
+.igd-act-add {
+  width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(14,165,233,0.06); border: 1.5px dashed rgba(14,165,233,0.32);
+  color: var(--au-blue); font-size: 13px; cursor: pointer; transition: 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.igd-act-add:hover { background: rgba(14,165,233,0.18); }
+/* Activity info toggle button */
+.igd-act-info-btn {
+  width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0;
+  background: transparent; border: none; color: var(--muted);
+  font-size: 8px; cursor: pointer; padding: 0; transition: 0.15s; line-height: 1;
+}
+.igd-act-info-btn:hover, .igd-act-info-btn.open { color: var(--nc); }
+/* Info panel below the acts row */
+.igd-act-info {
+  margin-top: 5px; padding: 6px 9px; border-radius: 8px;
+  background: color-mix(in srgb,var(--nc) 5%,var(--surface));
+  border: 1px solid color-mix(in srgb,var(--nc) 18%,var(--border));
+  display: flex; flex-direction: column; gap: 4px;
+}
+.igi-row { display: flex; align-items: center; gap: 6px; }
+.igi-lbl { font-size: 11px; flex-shrink: 0; width: 16px; text-align: center; }
+.igi-inp {
+  flex: 1; background: none; border: none; border-bottom: 1px solid transparent;
+  outline: none; font-size: 11px; color: var(--text); font-family: inherit; min-width: 0;
+  padding: 1px 0;
+}
+.igi-inp:focus { border-bottom-color: var(--nc); }
+.igi-inp::placeholder { color: var(--muted); opacity: 0.5; }
+.igi-url-inp { color: var(--au-blue); }
+.igi-open {
+  font-size: 10px; color: var(--au-blue); text-decoration: none;
+  padding: 1px 5px; border-radius: 4px;
+  background: rgba(14,165,233,0.1); flex-shrink: 0; white-space: nowrap;
+}
+.igi-open:hover { background: rgba(14,165,233,0.22); }
+/* Hotel card (between days) */
+.igd-hotel {
+  display: flex; align-items: center; gap: 6px; margin: 5px 0 3px;
+  padding: 5px 8px; border-radius: 8px;
+  background: color-mix(in srgb,var(--nc) 7%,var(--surface));
+  border: 1px solid color-mix(in srgb,var(--nc) 22%,var(--border));
+}
+.igh-icon { font-size: 11px; flex-shrink: 0; opacity: .7; }
+.igh-inp {
+  font-size: 11px; background: none; border: none; outline: none;
+  flex: 1; color: var(--text); font-family: inherit; min-width: 0;
+}
+.igh-inp::placeholder { color: var(--muted); opacity: 0.55; }
+/* Day row delete / add controls */
+.igd-del {
+  width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18);
+  color: #ef4444; font-size: 9px; cursor: pointer; transition: 0.15s;
+  display: flex; align-items: center; justify-content: center; margin-left: auto;
+}
+.igd-del:hover { background: rgba(239,68,68,0.18); }
+.igd-add {
+  display: flex; align-items: center; gap: 5px; margin-top: 5px; cursor: pointer;
+  font-size: 10px; color: var(--muted); opacity: 0.5; transition: 0.15s;
+  border: 1.5px dashed transparent; border-radius: 7px; padding: 3px 6px;
+}
+.igd-add:hover { opacity: 1; border-color: color-mix(in srgb,var(--nc) 30%,transparent); color: var(--nc); }
+.igd-add-icon {
+  width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(14,165,233,0.07); border: 1.5px dashed rgba(14,165,233,0.35);
+  color: var(--au-blue); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Map CTA button ── */
+.map-cta {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--no-border);
+  border-radius: 12px;
+  padding: 13px 15px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.map-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(14,165,233,0.12); }
+.map-cta-icon { font-size: 22px; }
+.map-cta-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.map-cta-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.map-cta-arrow { margin-left: auto; font-size: 16px; color: var(--au-blue); }
+
+/* ══════════════════════════════════════
+   MAP VIEW (full-screen Leaflet)
+══════════════════════════════════════ */
+#view-map { position: fixed !important; inset: 0; z-index: 500; background: #0f172a; overflow: hidden; }
+#view-map.active { display: block !important; }
+
+/* leaflet in map view */
+#mv-map { position: absolute; inset: 0; top: 52px; left: 260px; }
+body.map-sidebar-closed #mv-map { left: 0; }
+
+/* topbar */
+#mv-topbar {
+  position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 600;
+  background: rgba(10,15,30,0.9); backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 10px; padding: 0 14px;
+}
+.mv-logo { font-size: 14px; font-weight: 700; color: #f1f5f9; letter-spacing: 2px; }
+.mv-logo span { color: #34d399; }
+.mv-sep { flex: 1; }
+.mv-btn {
+  height: 32px; padding: 0 13px; border-radius: 8px; font-size: 11px; font-weight: 700;
+  cursor: pointer; border: none; font-family: inherit;
+  display: flex; align-items: center; gap: 5px; transition: all 0.15s; white-space: nowrap;
+}
+.mv-btn-ghost { background: rgba(255,255,255,0.07); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+.mv-btn-ghost:hover { background: rgba(255,255,255,0.14); color: #f1f5f9; }
+.mv-btn-ghost.mv-active { background: rgba(52,211,153,0.15); color: #34d399; border-color: rgba(52,211,153,0.35); }
+.mv-btn-primary { background: #0ea5e9; color: white; }
+.mv-btn-primary:hover { background: #0284c7; }
+.mv-btn-primary.mv-adding { background: #dc2626; }
+.mv-btn-back { background: rgba(255,255,255,0.07); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+.mv-btn-back:hover { background: rgba(255,255,255,0.14); color: #f1f5f9; }
+
+/* sidebar */
+#mv-sidebar {
+  position: absolute; top: 52px; left: 0; bottom: 0; width: 260px; z-index: 590;
+  background: rgba(10,15,30,0.92); backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex; flex-direction: column;
+  transition: transform 0.25s;
+}
+body.map-sidebar-closed #mv-sidebar { transform: translateX(-260px); }
+.mv-sb-head { padding: 13px 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.07); flex-shrink: 0; }
+.mv-sb-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #475569; margin-bottom: 2px; }
+.mv-sb-summary { font-size: 11px; color: #64748b; }
+.mv-sb-list { flex: 1; overflow-y: auto; padding: 6px 0; }
+.mv-sb-list::-webkit-scrollbar { width: 3px; }
+.mv-sb-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+.mv-city-row { padding: 9px 13px; display: flex; align-items: center; gap: 9px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.12s; }
+.mv-city-row:hover { background: rgba(255,255,255,0.04); }
+.mv-city-num { width: 23px; height: 23px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.mv-city-info { flex: 1; min-width: 0; }
+.mv-city-name { font-size: 12px; font-weight: 700; color: #e2e8f0; }
+.mv-city-sub { font-size: 10px; color: #475569; margin-top: 1px; }
+.mv-city-rm { opacity: 0; width: 20px; height: 20px; border-radius: 5px; background: rgba(220,38,38,0.15); border: none; color: #f87171; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mv-city-row:hover .mv-city-rm { opacity: 1; }
+.mv-conn-row { padding: 3px 13px 3px 22px; display: flex; align-items: center; gap: 7px; }
+.mv-conn-line { width: 14px; height: 1px; flex-shrink: 0; }
+.mv-conn-line.flight { border-bottom: 1.5px dashed #0ea5e9; }
+.mv-conn-line.ship   { border-bottom: 1.5px dotted #34d399; }
+.mv-conn-label { font-size: 10px; color: #334155; }
+
+/* sidebar toggle */
+#mv-toggle {
+  position: absolute; top: 60px; left: 260px; z-index: 595; width: 22px; height: 44px;
+  background: rgba(10,15,30,0.85); border: 1px solid rgba(255,255,255,0.08);
+  border-left: none; border-radius: 0 7px 7px 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: #475569; font-size: 11px;
+  transition: left 0.25s;
+}
+body.map-sidebar-closed #mv-toggle { left: 0; }
+
+/* hover card */
+#mv-hcard {
+  position: fixed; z-index: 2000; background: rgba(15,20,35,0.97);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+  padding: 11px 13px; min-width: 210px; max-width: 270px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4); pointer-events: none;
+  opacity: 0; transition: opacity 0.15s;
+}
+#mv-hcard.mv-hv { opacity: 1; }
+.mv-hc-days { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; background: rgba(14,165,233,0.15); color: #38bdf8; margin-bottom: 6px; }
+.mv-hc-name { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 1px; }
+.mv-hc-sub { font-size: 10px; color: #64748b; margin-bottom: 8px; }
+.mv-hc-sec { margin-bottom: 6px; }
+.mv-hc-sec:last-child { margin-bottom: 0; }
+.mv-hc-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #334155; margin-bottom: 3px; }
+.mv-hc-item { font-size: 11px; color: #94a3b8; display: flex; gap: 4px; }
+.mv-hc-item::before { content: '·'; color: #334155; flex-shrink: 0; }
+
+/* add form */
+#mv-aform {
+  position: fixed; z-index: 3000; background: #1e293b;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 14px;
+  padding: 16px; width: 280px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); display: none;
+}
+#mv-aform.mv-vis { display: block; }
+.mv-form-title { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
+.mv-form-lbl { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #475569; margin-bottom: 4px; display: block; }
+.mv-form-inp {
+  width: 100%; padding: 7px 9px; background: #0f172a; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 7px; color: #f1f5f9; font-size: 12px; font-family: inherit;
+  outline: none; transition: border-color 0.15s; margin-bottom: 9px;
+}
+.mv-form-inp:focus { border-color: #0ea5e9; }
+.mv-form-inp::placeholder { color: #334155; }
+textarea.mv-form-inp { resize: vertical; min-height: 60px; }
+.mv-form-row { display: flex; gap: 7px; margin-top: 10px; }
+.mv-form-row .mv-btn { flex: 1; justify-content: center; height: 34px; }
+.mv-btn-cancel { background: rgba(255,255,255,0.06); color: #64748b; border: 1px solid rgba(255,255,255,0.08); }
+
+/* add hint */
+#mv-hint {
+  position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 1500;
+  background: rgba(220,38,38,0.9); color: white; font-size: 11px; font-weight: 700;
+  padding: 7px 16px; border-radius: 20px; pointer-events: none; display: none;
+}
+#mv-hint.mv-vis { display: block; }
+body.mv-adding-mode #mv-map { cursor: crosshair !important; }
+
+/* legend */
+#mv-legend {
+  position: absolute; bottom: 14px; right: 14px; z-index: 590;
+  background: rgba(10,15,30,0.85); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 9px 11px;
+  font-size: 10px; color: #475569;
+}
+.mv-leg-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.mv-leg-row:last-child { margin-bottom: 0; }
+.mv-leg-line { width: 20px; height: 2px; }
+.mv-leg-flight { border-bottom: 2px dashed #0ea5e9; }
+.mv-leg-ship   { border-bottom: 2px dotted #34d399; }
+
+/* city markers */
+.mv-city-marker { display: flex; flex-direction: column; align-items: center; }
+.mv-pin {
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: white;
+  border: 2px solid rgba(255,255,255,0.7); box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  cursor: pointer; transition: transform 0.15s;
+}
+.mv-pin:hover { transform: scale(1.15); }
+.mv-mlabel {
+  margin-top: 3px; font-size: 10px; font-weight: 700; color: #f1f5f9; white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ HOME ══════════════════════════════════════ -->
+<div id="home" class="view active">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Travel Proposal · 2027</div>
+      <div class="hero-title">極 光 行<span>.</span></div>
+      <div class="hero-sub">
+        北歐四國選址提案 ——  挪威 · 瑞典 · 芬蘭 · 冰島<br>
+        目標：看見北極光。主要候選：挪威（15天可行性評估中）
+      </div>
+      <div class="hero-tags">
+        <span class="htag htag-blue">最佳時機 10月–3月</span>
+        <span class="htag htag-green">KP ≥ 2 可見</span>
+        <span class="htag htag-v">預計 2027 / 10 月</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embedded route map -->
+  <div class="embed-map-wrap">
+    <div id="embed-map"></div>
+  </div>
+  <div class="embed-map-bar">
+    <div class="em-tabs" id="em-tabs"></div>
+    <button class="em-link" onclick="nav('map')">🗺 全螢幕</button>
+  </div>
+
+  <div class="section-wrap">
+    <div class="section-label" style="margin-top:4px">四國比較 — 點選查看分析</div>
+
+    <div class="compare-grid">
+      <!-- Norway -->
+      <div class="cmp-card cmp-card-no focused" onclick="nav('norway')">
+        <div class="cmp-header">
+          <div class="cmp-flag">🇳🇴</div>
+          <div class="cmp-name">挪威<span class="cmp-name-en"> Norway</span></div>
+          <div><span class="focused-badge">主要候選</span></div>
+        </div>
+        <div class="cmp-body">
+          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">12–15 天</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
+            <div class="aurora-dots">
+              <div class="dot on-no"></div><div class="dot on-no"></div><div class="dot on-no"></div><div class="dot on-no"></div><div class="dot on-no"></div>
+            </div>
+          </div>
+          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★★</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">10月–3月</span></div>
+        </div>
+      </div>
+
+      <!-- Sweden -->
+      <div class="cmp-card cmp-card-se" onclick="nav('sweden')">
+        <div class="cmp-header">
+          <div class="cmp-flag">🇸🇪</div>
+          <div class="cmp-name">瑞典<span class="cmp-name-en"> Sweden</span></div>
+        </div>
+        <div class="cmp-body">
+          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">7–10 天</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
+            <div class="aurora-dots">
+              <div class="dot on-se"></div><div class="dot on-se"></div><div class="dot on-se"></div><div class="dot on-se"></div><div class="dot"></div>
+            </div>
+          </div>
+          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">11月–3月</span></div>
+        </div>
+      </div>
+
+      <!-- Finland -->
+      <div class="cmp-card cmp-card-fi" onclick="nav('finland')">
+        <div class="cmp-header">
+          <div class="cmp-flag">🇫🇮</div>
+          <div class="cmp-name">芬蘭<span class="cmp-name-en"> Finland</span></div>
+        </div>
+        <div class="cmp-body">
+          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">7–10 天</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
+            <div class="aurora-dots">
+              <div class="dot on-fi"></div><div class="dot on-fi"></div><div class="dot on-fi"></div><div class="dot on-fi"></div><div class="dot"></div>
+            </div>
+          </div>
+          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">11月–3月</span></div>
+        </div>
+      </div>
+
+      <!-- Iceland -->
+      <div class="cmp-card cmp-card-is" onclick="nav('iceland')">
+        <div class="cmp-header">
+          <div class="cmp-flag">🇮🇸</div>
+          <div class="cmp-name">冰島<span class="cmp-name-en"> Iceland</span></div>
+        </div>
+        <div class="cmp-body">
+          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">7–10 天</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
+            <div class="aurora-dots">
+              <div class="dot on-is"></div><div class="dot on-is"></div><div class="dot on-is"></div><div class="dot on-is"></div><div class="dot"></div>
+            </div>
+          </div>
+          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★★</span></div>
+          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">9月–3月</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 各面向比較 -->
+    <div class="axis-card">
+      <div class="axis-title">各面向比較</div>
+      <div class="axis-row">
+        <div class="axis-q">極光機率</div>
+        <div style="flex:1">
+          <div style="display:flex;gap:4px;margin-bottom:3px;align-items:center">
+            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-no" style="width:100%"></div></div>
+            <div class="axis-label" style="color:var(--no)">挪威</div>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:3px;align-items:center">
+            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-se" style="width:80%"></div></div>
+            <div class="axis-label" style="color:var(--se)">瑞典</div>
+          </div>
+          <div style="display:flex;gap:4px;margin-bottom:3px;align-items:center">
+            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-fi" style="width:78%"></div></div>
+            <div class="axis-label" style="color:var(--fi)">芬蘭</div>
+          </div>
+          <div style="display:flex;gap:4px;align-items:center">
+            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-is" style="width:72%"></div></div>
+            <div class="axis-label" style="color:var(--is)">冰島</div>
+          </div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border);margin:10px 0"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
+        <div><span style="color:var(--no);font-weight:700">挪威</span> — 地景豐富，活動種類最多</div>
+        <div><span style="color:var(--se);font-weight:700">瑞典</span> — Abisko 微氣候，雲層最少</div>
+        <div><span style="color:var(--fi);font-weight:700">芬蘭</span> — 玻璃屋最夢幻，雪橇犬最齊全</div>
+        <div><span style="color:var(--is);font-weight:700">冰島</span> — 地質景觀唯一，但天氣多變</div>
+      </div>
+    </div>
+
+    <!-- 待解決的核心問題 -->
+    <div class="kq-card">
+      <div class="kq-title">⚡ 待決策的核心問題</div>
+      <div class="kq-item"><span class="kq-dot">›</span><span>挪威 15 天夠不夠？Oslo + Lofoten + Tromsø 三段路線是否合理？</span></div>
+      <div class="kq-item"><span class="kq-dot">›</span><span>單一國家深度 vs 兩國輕度？（挪威 + 芬蘭 or 挪威 + 瑞典）</span></div>
+      <div class="kq-item"><span class="kq-dot">›</span><span>10 月是否最佳時間？還是改 12 月–1 月提升機率？</span></div>
+      <div class="kq-item"><span class="kq-dot">›</span><span>Lofoten → Tromsø 用郵輪（夜船體驗）還是轉機（省時）？</span></div>
+    </div>
+
+    <!-- 路線地圖入口 -->
+    <div class="map-cta" onclick="nav('map')">
+      <div class="map-cta-icon">🗺</div>
+      <div>
+        <div class="map-cta-title">互動路線地圖</div>
+        <div class="map-cta-sub">奧斯陸 → 羅浮敦 → 特羅姆瑟 · 可新增城市 · 查看景點美食</div>
+      </div>
+      <div class="map-cta-arrow">→</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ NORWAY ══════════════════════════════════════ -->
+<div id="view-norway" class="view">
+  <div class="page-header">
+    <button class="btn-back" onclick="nav('home')">←</button>
+    <span class="page-flag">🇳🇴</span>
+    <span class="page-title">挪威 Norway</span>
+    <span class="page-sub">主要候選 · 詳細分析</span>
+  </div>
+  <div class="detail-body">
+
+    <div class="country-hero ch-no">
+      <div class="ch-stat"><div class="ch-stat-val">15</div><div class="ch-stat-label">建議天數（上限）</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">★×5</div><div class="ch-stat-label">極光強度</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">10–3</div><div class="ch-stat-label">最佳月份</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">3段</div><div class="ch-stat-label">建議分區</div></div>
+    </div>
+
+    <!-- 15天可行性 -->
+    <div class="feasibility">
+      <div class="fea-title">📐 15 天可行性分析</div>
+      <div class="fea-row">
+        <div class="fea-label"><span>奧斯陸 Oslo（城市）</span><span style="color:var(--no)">3晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:20%"></div></div>
+      </div>
+      <div class="fea-row">
+        <div class="fea-label"><span>羅浮敦 Lofoten（峽灣）</span><span style="color:var(--no)">3晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:20%"></div></div>
+      </div>
+      <div class="fea-row">
+        <div class="fea-label"><span>特羅姆瑟 Tromsø（極光）</span><span style="color:var(--no)">4晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:27%"></div></div>
+      </div>
+      <div class="fea-row">
+        <div class="fea-label"><span>移動天數（飛機 + 郵輪）</span><span style="color:var(--muted)">2–3天</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:16%;background:var(--muted2)"></div></div>
+      </div>
+      <div style="margin-top:10px;padding:10px 12px;background:var(--no-bg);border-radius:8px;font-size:12px;color:var(--sub);border:1px solid var(--no-border)">
+        <strong style="color:var(--no)">結論：15天可行，略緊。</strong>
+        Oslo + Lofoten + Tromsø 三段合計 10 個在地晚數 + 2–3 天移動，剛好填滿 14–15 天。不建議再加第四個據點。
+      </div>
+    </div>
+
+    <!-- 路線方案 -->
+    <div class="ana-block">
+      <div class="ana-head">🗺 路線方案</div>
+      <div class="ana-body">
+        <div class="route-card">
+          <div class="route-title">方案 A — 三段北上 <span class="route-tag rec">推薦</span></div>
+          <div class="route-flow">
+            <div class="rf-node">桃園</div><div class="rf-arr">✈</div>
+            <div class="rf-node">奧斯陸 3晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">羅浮敦 3晚</div><div class="rf-arr">🚢夜船</div>
+            <div class="rf-node">特羅姆瑟 4晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">桃園</div>
+          </div>
+          <div class="route-note">不走回頭路，地理動線最順（南→北）。Lofoten→Tromsø 夜船省一晚住宿、甲板看極光。Emirates OSL 進出，國內線另購。</div>
+        </div>
+        <div class="route-card">
+          <div class="route-title">方案 B — 全程飛機 <span class="route-tag alt">備選</span></div>
+          <div class="route-flow">
+            <div class="rf-node">桃園</div><div class="rf-arr">✈</div>
+            <div class="rf-node">奧斯陸 3晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">羅浮敦 3晚</div><div class="rf-arr">✈轉機</div>
+            <div class="rf-node">特羅姆瑟 4晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">桃園</div>
+          </div>
+          <div class="route-note">Lofoten → Bodø → Tromsø 轉機，約 4–5 小時。省郵輪費但少夜船體驗，適合不想在船上過夜的人。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 機票資訊 -->
+    <div class="ana-block" style="margin-bottom:14px">
+      <div class="ana-head">✈ 機票資訊（Emirates · 確認班次）</div>
+      <div class="ana-body" style="padding:12px 14px">
+
+        <!-- 去程 -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">去程 · 2027/10/09（六）· 總飛行 18h 05m</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+              <span style="font-size:16px">✈</span>
+              <div style="flex:1">
+                <div style="font-weight:700">EK387 &nbsp;<span style="font-weight:400;color:var(--muted)">A350</span></div>
+                <div style="color:var(--muted);font-size:11px">桃園 TPE → 杜拜 DXB</div>
+              </div>
+              <div style="text-align:right;font-size:11px">
+                <div style="font-weight:700">00:30</div>
+                <div style="color:var(--muted)">10/9 出發</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+              <span style="font-size:16px">✈</span>
+              <div style="flex:1">
+                <div style="font-weight:700">EK159 &nbsp;<span style="font-weight:400;color:var(--muted)">A350</span></div>
+                <div style="color:var(--muted);font-size:11px">杜拜 DXB → 奧斯陸 OSL</div>
+              </div>
+              <div style="text-align:right;font-size:11px">
+                <div style="font-weight:700">12:35</div>
+                <div style="color:var(--muted)">10/9 抵達</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:6px;font-size:11px;color:var(--muted);padding:5px 10px;background:var(--surface2);border-radius:6px">
+            經濟艙最低 <strong>TWD 18,973</strong> 起 · 豪華經濟（彈性加值）<strong>TWD 28,705</strong> 起（單程/人）
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+
+        <!-- 回程 -->
+        <div style="margin-bottom:12px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">回程 · 2027/10/22（五）出發 → 10/23（六）抵台 · 總飛行 19h 40m</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
+              <span style="font-size:16px">🛫</span>
+              <div style="flex:1">
+                <div style="font-weight:700;color:#92400e">國內線 TOS → OSL &nbsp;<span style="font-weight:400;color:var(--muted)">另購 · 北歐航空 SAS 或挪威穿梭航空 Norwegian</span></div>
+                <div style="color:var(--muted);font-size:11px">特羅姆瑟 → 奧斯陸 · 約 1h50m · 須於 10/22 早上抵達 OSL 趕 EK160 14:35</div>
+                <div style="margin-top:4px;font-size:11px;font-weight:700;color:#92400e">約 TWD 3,000–4,000 / 人</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+              <span style="font-size:16px">✈</span>
+              <div style="flex:1">
+                <div style="font-weight:700">EK160 &nbsp;<span style="font-weight:400;color:var(--muted)">A350</span></div>
+                <div style="color:var(--muted);font-size:11px">奧斯陸 OSL → 杜拜 DXB</div>
+              </div>
+              <div style="text-align:right;font-size:11px">
+                <div style="font-weight:700">14:35</div>
+                <div style="color:var(--muted)">10/22 出發</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+              <span style="font-size:16px">✈</span>
+              <div style="flex:1">
+                <div style="font-weight:700">EK366 &nbsp;<span style="font-weight:400;color:var(--muted)">A380</span></div>
+                <div style="color:var(--muted);font-size:11px">杜拜 DXB → 台北 TPE</div>
+              </div>
+              <div style="text-align:right;font-size:11px">
+                <div style="font-weight:700">16:15</div>
+                <div style="color:var(--muted)">10/23 抵達</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:6px;font-size:11px;color:var(--muted);padding:5px 10px;background:var(--surface2);border-radius:6px">
+            經濟艙最低 <strong>TWD 17,574</strong> 起 · 豪華經濟（彈性加值）<strong>TWD 29,124</strong> 起（單程/人）
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
+
+        <!-- 票種比較：豪經為主 -->
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">費用試算（豪華經濟 · 彈性加值 · 2人）</div>
+
+          <!-- 主卡：豪經彈性加值 -->
+          <div style="padding:14px 16px;border:2px solid var(--no);border-radius:10px;background:var(--no-bg);margin-bottom:10px">
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
+              <span style="font-size:22px;font-weight:900;color:var(--no)">29,124</span>
+              <span style="font-size:12px;color:var(--muted)">TWD / 人 / 單程（回程）</span>
+              <span style="margin-left:auto;background:var(--no);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px">規劃基準</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;margin-bottom:8px">
+              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">✅ 免改票・免退票</div>
+              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">🧳 35kg 行李</div>
+              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">💺 豪華經濟艙</div>
+            </div>
+            <div style="font-size:11px;color:var(--sub)">💡 符合 <strong>48,000 Skywards 哩程</strong>升等商務艙資格</div>
+          </div>
+
+          <!-- 兩人總計 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+              <div style="color:var(--muted);margin-bottom:3px">去程 2人</div>
+              <div style="font-weight:900;font-size:16px;color:var(--no)">57,410</div>
+              <div style="color:var(--muted2);font-size:10px">TWD（×2人）</div>
+            </div>
+            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+              <div style="color:var(--muted);margin-bottom:3px">回程 2人</div>
+              <div style="font-weight:900;font-size:16px;color:var(--no)">58,248</div>
+              <div style="color:var(--muted2);font-size:10px">TWD（×2人）</div>
+            </div>
+            <div style="padding:10px;border:2px solid var(--no);border-radius:8px;font-size:11px;text-align:center;background:var(--no-bg)">
+              <div style="color:var(--no);font-weight:700;margin-bottom:3px">機票合計（含國內線）</div>
+              <div style="font-weight:900;font-size:16px;color:var(--no)">~122,000</div>
+              <div style="color:var(--muted2);font-size:10px">TWD · 2人</div>
+            </div>
+          </div>
+
+          <!-- 其他票種參考 -->
+          <details style="font-size:11px">
+            <summary style="cursor:pointer;color:var(--muted);padding:4px 0">其他艙等參考（單程/人）▾</summary>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px">
+              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
+                <div style="color:var(--muted);font-size:10px">經濟優惠</div>
+                <div style="font-weight:700">18,973</div>
+                <div style="color:var(--muted2);font-size:10px">25kg</div>
+              </div>
+              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
+                <div style="color:var(--muted);font-size:10px">經濟彈性</div>
+                <div style="font-weight:700">17,574</div>
+                <div style="color:var(--muted2);font-size:10px">回程起（30kg）</div>
+              </div>
+              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
+                <div style="color:var(--muted);font-size:10px">商務艙</div>
+                <div style="font-weight:700">71,081</div>
+                <div style="color:var(--muted2);font-size:10px">回程起</div>
+              </div>
+              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
+                <div style="color:var(--muted);font-size:10px">頭等艙</div>
+                <div style="font-weight:700">113,922</div>
+                <div style="color:var(--muted2);font-size:10px">回程起</div>
+              </div>
+            </div>
+          </details>
+
+          <div style="margin-top:10px;font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px;line-height:1.7">
+            💡 去程 TWD 28,705、回程 TWD 29,124 均為豪華經濟彈性加值查詢值（非即時票價，以下單時為準）。<strong>Open-jaw（OSL進/TOS出）訂法需向 Emirates 確認可否一張票涵蓋</strong>。TOS→OSL 國內線（SAS 或 Norwegian）約 TWD 3,000–4,000/人，另行購買。
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 活動：分區詳細 -->
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">🎯 分區活動與費用估算</div>
+
+    <div class="regions-grid">
+
+    <!-- Oslo -->
+    <div class="region-block">
+      <div class="region-head">
+        <span class="region-head-flag">🏙</span>
+        <div class="region-head-info">
+          <div class="region-head-name">奧斯陸 Oslo</div>
+          <div class="region-head-sub">Day 1–3 · 城市文化 · 59°N</div>
+        </div>
+        <span class="region-nights">3 晚</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🎨</div>
+        <div class="act-main">
+          <div class="act-name">孟克美術館 MUNCH</div>
+          <div class="act-note">全球最大孟克典藏 · 新館 2021 年開幕 · Bjørvika 海濱</div>
+          <div class="act-meta"><span class="act-time">⏱ 2–3 小時</span><span class="act-cost">💰 ~600 TWD/人</span><a class="act-link official" href="https://munchmuseet.no/en/" target="_blank">🔗 官網</a></div>
+        </div>
+        <span class="act-tag tag-must">必訪</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🧝</div>
+        <div class="act-main">
+          <div class="act-name">地精博物館（Troll Museum）</div>
+          <div class="act-note">北歐神話地精文化 · 特色紀念品 · 市區 Karl Johans gate 一帶</div>
+          <div class="act-meta"><span class="act-time">⏱ 1 小時</span><span class="act-cost">💰 ~200 TWD/人</span><a class="act-link" href="https://www.getyourguide.com/s/?q=oslo+troll+museum" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-opt">特色</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">⛪</div>
+        <div class="act-main">
+          <div class="act-name">奧斯陸大教堂 Oslo Cathedral</div>
+          <div class="act-note">建於 1697 年 · 市中心 · 免費入場 · 精緻天花板壁畫</div>
+          <div class="act-meta"><span class="act-time">⏱ 30 分鐘</span><span class="act-cost">💰 免費</span><a class="act-link official" href="https://www.oslodomkirke.no/en/" target="_blank">🔗 官網</a></div>
+        </div>
+        <span class="act-tag tag-opt">散步</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🗿</div>
+        <div class="act-main">
+          <div class="act-name">維格蘭雕塑公園 Vigeland</div>
+          <div class="act-note">212 件青銅石雕 · 全球最大單人雕塑公園 · 免費</div>
+          <div class="act-meta"><span class="act-time">⏱ 1.5 小時</span><span class="act-cost">💰 免費</span><a class="act-link official" href="https://vigeland.museum.no/en/vigeland-park/" target="_blank">🔗 官網</a></div>
+        </div>
+        <span class="act-tag tag-must">必訪</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">⚓</div>
+        <div class="act-main">
+          <div class="act-name">阿克斯胡斯城堡 Akershus</div>
+          <div class="act-note">13 世紀中世紀城堡 · 港口全景 · 含博物館</div>
+          <div class="act-meta"><span class="act-time">⏱ 1.5 小時</span><span class="act-cost">💰 ~300 TWD/人</span><a class="act-link" href="https://www.getyourguide.com/s/?q=oslo+akershus+fortress+tour" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-opt">選配</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🛁</div>
+        <div class="act-main">
+          <div class="act-name">浮式桑拿 Tjuvholmen</div>
+          <div class="act-note">峽灣面桑拿艙 · 100°C 蒸好後跳入海水 · 需提前 2–3 週預約</div>
+          <div class="act-meta"><span class="act-time">⏱ 2 小時</span><span class="act-cost">💰 ~750 TWD/人</span><a class="act-link" href="https://www.getyourguide.com/s/?q=oslo+floating+sauna" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-book">提前訂</span>
+      </div>
+
+      <div class="food-section">
+        <div class="food-title">🍽 Oslo 特色美食</div>
+        <div class="food-items">
+          <span class="food-chip">🐟 煙燻鮭魚（Smoked Salmon）</span>
+          <span class="food-chip">🦐 Fiskeriet 海鮮市場</span>
+          <span class="food-chip">🥩 傳統挪威肉丸 Kjøttkaker</span>
+          <span class="food-chip">🏪 Mathallen 食品市場</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lofoten -->
+    <div class="region-block">
+      <div class="region-head">
+        <span class="region-head-flag">🏔</span>
+        <div class="region-head-info">
+          <div class="region-head-name">羅浮敦群島 Lofoten</div>
+          <div class="region-head-sub">Day 4–6 · 峽灣漁村 · 68°N 北極圈內</div>
+        </div>
+        <span class="region-nights">3 晚</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🏡</div>
+        <div class="act-main">
+          <div class="act-name">Reine 峽灣村落</div>
+          <div class="act-note">挪威最美小鎮 · 紅色木造漁屋（Rorbu）· 倒影攝影聖地</div>
+          <div class="act-meta"><span class="act-time">⏱ 半天</span><span class="act-cost">💰 免費（住宿 Rorbu ~5,000 TWD/晚）</span><a class="act-link official" href="https://www.rorbuer.no/" target="_blank">🔗 Eliassen Rorbuer</a></div>
+        </div>
+        <span class="act-tag tag-must">必訪</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🎣</div>
+        <div class="act-main">
+          <div class="act-name">Henningsvær 漁村</div>
+          <div class="act-note">懸崖上的漁港 · 彩色小屋 · 有足球場建在海中礁石上</div>
+          <div class="act-meta"><span class="act-time">⏱ 半天</span><span class="act-cost">💰 免費</span><a class="act-link official" href="https://www.lofoten.info/en/municipalities/vagan/henningsvaer/" target="_blank">🔗 資訊</a></div>
+        </div>
+        <span class="act-tag tag-must">必訪</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🦅</div>
+        <div class="act-main">
+          <div class="act-name">Trollfjord 海鷹遊船</div>
+          <div class="act-note">峽灣深入 · 白尾海鷹觀察 · 從 Svolvær 出發 · 3–4 小時</div>
+          <div class="act-meta"><span class="act-time">⏱ 3–4 小時</span><span class="act-cost">💰 ~1,800–2,100 TWD/人</span><a class="act-link" href="https://www.getyourguide.com/s/?q=lofoten+trollfjord+boat+tour" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-book">提前訂</span>
+      </div>
+
+
+      <div class="act-row">
+        <div class="act-icon">🌌</div>
+        <div class="act-main">
+          <div class="act-name">極光觀賞（Lofoten）</div>
+          <div class="act-note">Reine 無光害 · 海灘倒影極光 · 不需付費業者，自行等待即可</div>
+          <div class="act-meta"><span class="act-time">⏱ 晚間 9pm–2am</span><span class="act-cost">💰 免費（業者行程 ~1,500 TWD）</span><a class="act-link" href="https://www.getyourguide.com/s/?q=lofoten+northern+lights+tour" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-must">必試</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🚢</div>
+        <div class="act-main">
+          <div class="act-name">Hurtigruten 北上夜船 → Tromsø</div>
+          <div class="act-note">Svolvær 上船 · 約 16 小時抵達 Tromsø · 甲板觀極光 · 省一晚住宿</div>
+          <div class="act-meta"><span class="act-time">⏱ 16 小時（含過夜）</span><span class="act-cost">💰 船艙 ~4,500–7,500 TWD/人</span><a class="act-link official" href="https://www.hurtigruten.com/en-us/norway-cruises/" target="_blank">🔗 官網</a></div>
+        </div>
+        <span class="act-tag tag-book">提前訂</span>
+      </div>
+
+      <div class="food-section">
+        <div class="food-title">🍽 Lofoten 特色美食</div>
+        <div class="food-items">
+          <span class="food-chip">🐟 新鮮鱈魚 / 鹽漬鱈魚 Stockfish</span>
+          <span class="food-chip">🐋 鯨魚肉 Hvalbiff（在地合法）</span>
+          <span class="food-chip">🍣 當季鮭魚刺身</span>
+          <span class="food-chip">🦞 挪威龍蝦</span>
+          <span class="food-chip">🍺 Mack 在地啤酒</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tromsø -->
+    <div class="region-block">
+      <div class="region-head">
+        <span class="region-head-flag">🌌</span>
+        <div class="region-head-info">
+          <div class="region-head-name">特羅姆瑟 Tromsø</div>
+          <div class="region-head-sub">Day 7–10 · 北極首都 · 極光核心基地 · 69°N</div>
+        </div>
+        <span class="region-nights">4 晚</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🌌</div>
+        <div class="act-main">
+          <div class="act-name">極光追逐行程</div>
+          <div class="act-note">專業業者開車追雲隙 · 天氣不佳保證重排 · 建議連訂 2–3 晚提升機率</div>
+          <div class="act-meta"><span class="act-time">⏱ 晚間 6–10 小時</span><span class="act-cost">💰 ~3,000–4,500 TWD/人·晚</span><a class="act-link" href="https://www.getyourguide.com/s/?q=tromso+northern+lights+tour" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-must">必排</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🦌</div>
+        <div class="act-main">
+          <div class="act-name">薩米馴鹿體驗 Reindeer &amp; Sami Experience</div>
+          <div class="act-note">薩米族牧場 · 餵食馴鹿 · 聆聽 Joik 歌謠 · 含傳統餐（馴鹿肉）</div>
+          <div class="act-meta"><span class="act-time">⏱ 2–4 小時</span><span class="act-cost">💰 USD 200–300 / 人（GYG）≈ TWD 6,400–9,600</span><a class="act-link" href="https://www.getyourguide.com/s/?q=tromso+reindeer+sami+experience" target="_blank">🔗 GYG</a></div>
+          <div style="margin-top:5px;font-size:10px;color:var(--muted);line-height:1.7;background:var(--surface2);border-radius:6px;padding:5px 8px">
+            <strong>價差原因：</strong>
+            ~USD 200：餵食 + 雪橇體驗 + Joik + 簡單點心，約 2h ·
+            ~USD 250：加薩米傳統晚餐（馴鹿肉），約 3h ·
+            ~USD 300：全包式含高級晚宴或日落行程，約 4h
+          </div>
+        </div>
+        <span class="act-tag tag-book">提前訂</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🏔</div>
+        <div class="act-main">
+          <div class="act-name">Lyngen Alps 冰川健行</div>
+          <div class="act-note">Tromsø 東邊約 1.5h · 需嚮導 · 全天行程 · 10月仍可行（需確認雪況）</div>
+          <div class="act-meta"><span class="act-time">⏱ 全天（8–10 小時）</span><span class="act-cost">💰 ~4,500–6,000 TWD/人</span><a class="act-link" href="https://www.getyourguide.com/s/?q=tromso+lyngen+alps+glacier+hiking" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-book">提前訂</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🫎</div>
+        <div class="act-main">
+          <div class="act-name">麋鹿觀察 Moose Safari</div>
+          <div class="act-note">10 月最佳季（交配季後行動多）· 半天導覽 · 吉普車深入林間</div>
+          <div class="act-meta"><span class="act-time">⏱ 半天（4–5 小時）</span><span class="act-cost">💰 ~2,400–3,000 TWD/人</span><a class="act-link" href="https://www.getyourguide.com/s/?q=tromso+moose+safari" target="_blank">🔗 GYG</a></div>
+        </div>
+        <span class="act-tag tag-opt">選配</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🚡</div>
+        <div class="act-main">
+          <div class="act-name">Fjellheisen 纜車 · Storsteinen 421m</div>
+          <div class="act-note">俯瞰 Tromsø 峽灣全景 · 夜間可配合極光 · 約 4 分鐘抵達山頂 · 頂端有 Fjellstua 咖啡廳</div>
+          <div class="act-meta"><span class="act-time">⏱ 1–2 小時</span><span class="act-cost">💰 645 NOK / 人（官網）≈ USD 69（GYG）≈ TWD 2,200</span><a class="act-link official" href="https://fjellheisen.no/en/" target="_blank">🔗 官網</a><a class="act-link" href="https://www.getyourguide.com/s/?q=tromso+fjellheisen+cable+car" target="_blank">🔗 GYG</a></div>
+          <div style="margin-top:5px;font-size:10px;color:var(--muted);line-height:1.7;background:var(--surface2);border-radius:6px;padding:5px 8px">
+            官網直購 645 NOK 較 GYG（USD 69 ≈ TWD 2,200）便宜約 300 TWD；官網營業至深夜 00:00，極光季可搭夜間纜車
+          </div>
+        </div>
+        <span class="act-tag tag-must">必訪</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">⛪</div>
+        <div class="act-main">
+          <div class="act-name">北極大教堂 Arctic Cathedral</div>
+          <div class="act-note">標誌性三角形建築 · 1965 年落成 · 夜晚打燈極美 · 可看管風琴音樂會</div>
+          <div class="act-meta"><span class="act-time">⏱ 30–45 分鐘</span><span class="act-cost">💰 ~300 TWD/人</span><a class="act-link official" href="https://www.ishavskatedralen.no/" target="_blank">🔗 官網</a></div>
+        </div>
+        <span class="act-tag tag-opt">散步</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🍺</div>
+        <div class="act-main">
+          <div class="act-name">Raketten Bar & Pølse（世界最小酒吧）</div>
+          <div class="act-note">Tromsø 市中心廣場 · 僅容 3–5 人的火箭造型小酒吧 · 供應熱狗與在地啤酒</div>
+          <div class="act-meta"><span class="act-time">⏱ 30–60 分鐘</span><span class="act-cost">💰 ~300–500 TWD/人</span></div>
+        </div>
+        <span class="act-tag tag-must">特色</span>
+      </div>
+
+      <div class="act-row">
+        <div class="act-icon">🐕</div>
+        <div class="act-main">
+          <div class="act-name">雪橇犬（Husky）</div>
+          <div class="act-note">❌ 10 月積雪不足，需等到 12 月後方可開放</div>
+          <div class="act-meta"><span class="act-time">⏱ —</span><span class="act-cost">💰 不適用</span></div>
+        </div>
+        <span class="act-tag tag-warn">不可行</span>
+      </div>
+
+      <div class="food-section">
+        <div class="food-title">🍽 Tromsø 特色美食</div>
+        <div class="food-items">
+          <span class="food-chip">🦌 馴鹿肉燉湯 Reindeer Stew</span>
+          <span class="food-chip">🐋 鯨魚排 Hvalbiff（Arctandria）</span>
+          <span class="food-chip">🐟 Arctic Cod 鱈魚料理</span>
+          <span class="food-chip">🍺 Mack Brewery（全球最北啤酒廠）</span>
+          <span class="food-chip">☕ Risø 在地咖啡館</span>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- /regions-grid -->
+
+    <!-- 費用概估 -->
+    <div class="ana-block" style="margin-bottom:10px">
+      <div class="ana-head">💰 兩人費用概估（活動部分）</div>
+      <div class="ana-body" style="padding:12px 14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+          <div style="background:var(--no-bg);border:1px solid var(--no-border);border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Oslo 活動</div>
+            <div style="font-size:18px;font-weight:900;color:var(--no)">~6,000</div>
+            <div style="font-size:10px;color:var(--muted2)">TWD · 2人</div>
+          </div>
+          <div style="background:var(--no-bg);border:1px solid var(--no-border);border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Lofoten 活動</div>
+            <div style="font-size:18px;font-weight:900;color:var(--no)">~20,000</div>
+            <div style="font-size:10px;color:var(--muted2)">TWD · 2人（含夜船）</div>
+          </div>
+          <div style="background:var(--no-bg);border:1px solid var(--no-border);border-radius:8px;padding:10px;text-align:center">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:3px">Tromsø 活動</div>
+            <div style="font-size:18px;font-weight:900;color:var(--no)">~40,000</div>
+            <div style="font-size:10px;color:var(--muted2)">TWD · 2人</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);padding:8px 10px;background:var(--surface2);border-radius:7px;line-height:1.7">
+          ⚠ 以上為活動費用，不含住宿（約 TWD 30,000–50,000 共 10 晚）、餐飲（約 TWD 30,000）、機票（約 TWD 115,000）<br>
+          <strong style="color:var(--sub)">兩人預估總費用：TWD 25–30 萬</strong>（住宿規格視 Rorbu 等級浮動最大）
+        </div>
+      </div>
+    </div>
+
+    <!-- 優缺點 -->
+    <div class="ana-block">
+      <div class="ana-head">⚖️ 優缺點</div>
+      <div class="ana-body">
+        <div class="pros-cons">
+          <div class="pc-block pros">
+            <div class="pc-title">優點</div>
+            <div class="pc-item">活動種類最豐富</div>
+            <div class="pc-item">路線地理動線順</div>
+            <div class="pc-item">Lofoten 景觀唯一</div>
+            <div class="pc-item">Tromsø 極光基礎設施最完善</div>
+            <div class="pc-item">10月淡季人少</div>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-title">缺點</div>
+            <div class="pc-item">物價全歐最高之一</div>
+            <div class="pc-item">無直飛需轉杜拜</div>
+            <div class="pc-item">國內移動段多</div>
+            <div class="pc-item">10月天黑早，日照短</div>
+            <div class="pc-item">雪橇犬無法安排</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 行程方塊圖 -->
+    <div class="ana-block" style="margin-bottom:14px">
+      <div class="ana-head">📅 行程規劃（可拖曳調整順序）</div>
+      <div class="ana-body" style="padding:0">
+        <div class="itin-flow" id="itin-flow"></div>
+      </div>
+    </div>
+
+    <!-- 行程參考 -->
+    <div class="ana-block">
+      <div class="ana-head">📋 常見行程結構（整理自業者與評測資料）</div>
+      <div class="ana-body">
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">標準配置（10–12天）</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center">
+              <div style="font-size:18px;margin-bottom:4px">🏙</div>
+              <div style="font-size:12px;font-weight:700;color:var(--no)">奧斯陸</div>
+              <div style="font-size:20px;font-weight:800;color:var(--text);margin:4px 0">2–3</div>
+              <div style="font-size:10px;color:var(--muted)">晚 · 緩衝入境</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center">
+              <div style="font-size:18px;margin-bottom:4px">🏔</div>
+              <div style="font-size:12px;font-weight:700;color:var(--no)">羅浮敦</div>
+              <div style="font-size:20px;font-weight:800;color:var(--text);margin:4px 0">3–4</div>
+              <div style="font-size:10px;color:var(--muted)">晚 · 峽灣風景</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center">
+              <div style="font-size:18px;margin-bottom:4px">🌌</div>
+              <div style="font-size:12px;font-weight:700;color:var(--no)">特羅姆瑟</div>
+              <div style="font-size:20px;font-weight:800;color:var(--text);margin:4px 0">4–5</div>
+              <div style="font-size:10px;color:var(--muted)">晚 · 主力極光</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">特羅姆瑟 極光 Tour（Best Arctic 報價）</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--text)">極光追逐小巴（15人以內）</div>
+                <div style="font-size:10px;color:var(--muted)">機動追光 · 提供保暖裝備 · 相機腳架 · 輕食</div>
+              </div>
+              <div style="font-size:13px;font-weight:800;color:var(--no);white-space:nowrap;margin-left:10px">1,590 NOK</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--text)">電動雙體船極光遊輪</div>
+                <div style="font-size:10px;color:var(--muted)">3小時 · 峽灣水面視角 · 無遮蔽</div>
+              </div>
+              <div style="font-size:13px;font-weight:800;color:var(--no);white-space:nowrap;margin-left:10px">1,290 NOK</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--text)">極光晚餐遊輪（Brim Explorer 亦有）</div>
+                <div style="font-size:10px;color:var(--muted)">3小時 · 北極風味海鮮 · 獲獎餐飲</div>
+              </div>
+              <div style="font-size:13px;font-weight:800;color:var(--no);white-space:nowrap;margin-left:10px">1,990 NOK</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--text)">帆船熱水浴缸極光</div>
+                <div style="font-size:10px;color:var(--muted)">豪華帆船 · 露天甲板熱水缸</div>
+              </div>
+              <div style="font-size:13px;font-weight:800;color:var(--no);white-space:nowrap;margin-left:10px">2,950 NOK</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:5px">資料來源：Best Arctic (bestarctic.com) · 另有 Brim Explorer 電動船可選 · 建議提前一週訂</div>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">羅浮敦 漁屋 Rorbu 推薦</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px">
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Eliassen Rorbuer</div>
+              <div style="font-size:10px;color:var(--muted)">Hamnøy · 極光攝影首選 · 現場餐廳</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px">
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Reine Rorbuer</div>
+              <div style="font-size:10px;color:var(--muted)">Reine · 最具代表性地標背景</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px">
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Å Rorbuer</div>
+              <div style="font-size:10px;color:var(--muted)">群島最南端 · 最原始孤立感</div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 10px">
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Svinøya Rorbuer</div>
+              <div style="font-size:10px;color:var(--muted)">Svolvær · 北入口 · 交通最方便</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:5px">⚠ 熱門漁屋旺季需提前 6–12 個月預訂</div>
+        </div>
+
+        <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:10px 12px">
+          <div style="font-size:11px;font-weight:700;color:#ef4444;margin-bottom:7px">常見後悔項目</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:11px;color:var(--text);display:flex;gap:7px"><span>❌</span><span>Tromsø 只排 2–3 晚（壞天氣沒有補救機會）</span></div>
+            <div style="font-size:11px;color:var(--text);display:flex;gap:7px"><span>❌</span><span>極光 Tour 只訂最後一晚（沒有 buffer）</span></div>
+            <div style="font-size:11px;color:var(--text);display:flex;gap:7px"><span>❌</span><span>羅浮敦沒有租車（島嶼之間幾乎無公車）</span></div>
+            <div style="font-size:11px;color:var(--text);display:flex;gap:7px"><span>❌</span><span>只走 Svolvær 跳過南部 Reine / Hamnøy</span></div>
+            <div style="font-size:11px;color:var(--text);display:flex;gap:7px"><span>❌</span><span>白天活動全略過（犬橇/冰川健行/雪地機車）</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ SWEDEN ══════════════════════════════════════ -->
+<div id="view-sweden" class="view">
+  <div class="page-header">
+    <button class="btn-back" onclick="nav('home')">←</button>
+    <span class="page-flag">🇸🇪</span>
+    <span class="page-title">瑞典 Sweden</span>
+    <span class="page-sub">分析</span>
+  </div>
+  <div class="detail-body">
+    <div class="country-hero ch-se">
+      <div class="ch-stat"><div class="ch-stat-val">8</div><div class="ch-stat-label">建議天數</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">★×4</div><div class="ch-stat-label">極光強度</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">11–3</div><div class="ch-stat-label">最佳月份</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">2段</div><div class="ch-stat-label">建議分區</div></div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:12px">
+    <div class="ana-block" style="margin-bottom:0">
+      <div class="ana-head">✨ 最大特色</div>
+      <div class="ana-body">
+        <div class="ana-row">
+          <div class="ana-row-icon">🌌</div>
+          <div class="ana-row-main"><div class="ana-row-name">Abisko 天空站（極光最佳觀測點）</div><div class="ana-row-note">特殊微氣候 · 雲層比周邊少 · 歐洲最低光害之一</div></div>
+          <span class="ana-row-tag tag-must">核心</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🏨</div>
+          <div class="ana-row-main"><div class="ana-row-name">ICEHOTEL（Jukkasjärvi）</div><div class="ana-row-note">全球最著名冰旅館 · 冰雕套房 · 需提前半年訂</div></div>
+          <span class="ana-row-tag tag-book">超早訂</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🐕</div>
+          <div class="ana-row-main"><div class="ana-row-name">雪橇犬 Husky</div><div class="ana-row-note">Kiruna 一帶 · 11月開放 · 挪威 10月無法，瑞典 11月起可行</div></div>
+          <span class="ana-row-tag tag-info">11月起</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🏙</div>
+          <div class="ana-row-main"><div class="ana-row-name">斯德哥爾摩 Stockholm</div><div class="ana-row-note">城市觀光 · 老城 Gamla Stan · 可縮短或略過</div></div>
+          <span class="ana-row-tag tag-opt">選配</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ana-block">
+      <div class="ana-head">🗺 建議路線</div>
+      <div class="ana-body">
+        <div class="route-card">
+          <div class="route-title">北極圈極光路線</div>
+          <div class="route-flow">
+            <div class="rf-node">桃園</div><div class="rf-arr">✈</div>
+            <div class="rf-node">斯德哥爾摩 2晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">Kiruna 2晚</div><div class="rf-arr">車</div>
+            <div class="rf-node">Abisko 3晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">桃園</div>
+          </div>
+          <div class="route-note">Abisko 靠近 Kiruna，可搭夜車或飛。ICEHOTEL 在 Kiruna 附近 Jukkasjärvi，可中途入住。</div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /two-col-grid -->
+
+    <!-- 機票資訊：瑞典 -->
+    <div class="ana-block" style="margin-bottom:14px">
+      <div class="ana-head">✈ 機票資訊（台北 → 斯德哥爾摩）</div>
+      <div class="ana-body" style="padding:12px 14px">
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+          <div style="padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;margin-bottom:3px">TPE → ARN（斯德哥爾摩 Arlanda）</div>
+            <div style="color:var(--muted);font-size:11px">經北京/上海轉機（Air China / China Eastern）約 15–17h，或伊斯坦堡（Turkish Airlines）約 19h</div>
+            <div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">
+              <span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:1px 8px;border-radius:8px">經濟艙 ~7,800–14,400 TWD/人</span>
+            </div>
+          </div>
+          <div style="padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
+            <div style="font-weight:700;color:#92400e;margin-bottom:3px">ARN → KRN（Kiruna）國內線 &nbsp;<span style="font-weight:400;color:var(--muted)">SAS（每日）或 Norwegian（週五/日）</span></div>
+            <div style="color:var(--muted);font-size:11px">1h 35m · Abisko 天空站距 Kiruna 約 1h 車程</div>
+            <div style="margin-top:4px;font-weight:700;color:#92400e;font-size:11px">約 TWD 2,000–5,600 / 人</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:2px">國際線 2人（來回估）</div>
+            <div style="font-weight:900;font-size:16px;color:var(--se)">~40,000–58,000</div>
+            <div style="color:var(--muted2);font-size:10px">TWD</div>
+          </div>
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:2px">國內線 2人（來回）</div>
+            <div style="font-weight:900;font-size:16px;color:var(--se)">~8,000–22,000</div>
+            <div style="color:var(--muted2);font-size:10px">TWD（含 ARN↔KRN×2）</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px">
+          ⚠ 無台灣直飛，北京/上海轉機最便宜但入境中國需簽證。推薦 Turkish Airlines（伊斯坦堡轉）或 Lufthansa（慕尼黑轉）免簽。ICEHOTEL 在 Jukkasjärvi（距 KRN 機場 15 分鐘）。
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:12px">
+    <div class="ana-block" style="margin-bottom:0">
+      <div class="ana-head">⚖️ 優缺點</div>
+      <div class="ana-body">
+        <div class="pros-cons">
+          <div class="pc-block pros">
+            <div class="pc-title">優點</div>
+            <div class="pc-item">Abisko 微氣候看極光勝率高</div>
+            <div class="pc-item">ICEHOTEL 為獨一無二體驗</div>
+            <div class="pc-item">11月後可雪橇犬</div>
+            <div class="pc-item">飛斯德哥爾摩選擇多</div>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-title">缺點</div>
+            <div class="pc-item">地景豐富度不如挪威</div>
+            <div class="pc-item">ICEHOTEL 需超早訂位</div>
+            <div class="pc-item">10月雪橇犬仍無法</div>
+            <div class="pc-item">活動集中在北部小鎮</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#eef2ff;border:1px solid var(--se-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--se);margin-bottom:8px">🔗 組合可能性</div>
+      <strong style="color:var(--se)">挪威 + 瑞典：</strong>
+      Tromsø → 飛 Kiruna → Abisko，約多 3–4 天，總行程需 18–19 天，15 天內不建議硬塞。<br><br>
+      <strong style="color:var(--se)">最佳單獨旅遊月份：11月–3月</strong>（積雪後 ICEHOTEL + 雪橇犬才完整）。
+    </div>
+    </div><!-- /two-col-grid -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ FINLAND ══════════════════════════════════════ -->
+<div id="view-finland" class="view">
+  <div class="page-header">
+    <button class="btn-back" onclick="nav('home')">←</button>
+    <span class="page-flag">🇫🇮</span>
+    <span class="page-title">芬蘭 Finland</span>
+    <span class="page-sub">分析</span>
+  </div>
+  <div class="detail-body">
+    <div class="country-hero ch-fi">
+      <div class="ch-stat"><div class="ch-stat-val">8</div><div class="ch-stat-label">建議天數</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">★×4</div><div class="ch-stat-label">極光強度</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">11–3</div><div class="ch-stat-label">最佳月份</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">2段</div><div class="ch-stat-label">建議分區</div></div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:12px">
+    <div class="ana-block" style="margin-bottom:0">
+      <div class="ana-head">✨ 最大特色</div>
+      <div class="ana-body">
+        <div class="ana-row">
+          <div class="ana-row-icon">🌌</div>
+          <div class="ana-row-main"><div class="ana-row-name">玻璃屋住宿（極光小屋）</div><div class="ana-row-note">透明屋頂 · 躺在床上看極光 · Kakslauttanen Arctic Resort 最知名</div></div>
+          <span class="ana-row-tag tag-must">最夢幻</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🐕</div>
+          <div class="ana-row-main"><div class="ana-row-name">雪橇犬（Husky Safari）</div><div class="ana-row-note">芬蘭北部 Lapland · 11月起積雪 · 種類最多</div></div>
+          <span class="ana-row-tag tag-info">11月起</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🦌</div>
+          <div class="ana-row-main"><div class="ana-row-name">馴鹿農場（Reindeer Farm）</div><div class="ana-row-note">Lapland 最道地 · 薩米文化</div></div>
+          <span class="ana-row-tag tag-must">必體驗</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🎅</div>
+          <div class="ana-row-main"><div class="ana-row-name">聖誕老人村（Rovaniemi）</div><div class="ana-row-note">Santa Park · 過 12月可體驗聖誕氛圍</div></div>
+          <span class="ana-row-tag tag-opt">選配</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#ecfdf5;border:1px solid var(--fi-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--fi);margin-bottom:8px">📅 最佳出發月份</div>
+      <strong>12月–1月最完整：</strong>玻璃屋 + 雪橇犬 + 馴鹿全部到位，積雪充足，是最完整的「童話極光」行程。<br><br>
+      <strong>10月：</strong>可看極光，但玻璃屋難訂、雪橇犬未開放，體驗打折扣。
+    </div>
+    </div><!-- /two-col-grid -->
+
+    <!-- 機票資訊：芬蘭 -->
+    <div class="ana-block" style="margin-bottom:14px">
+      <div class="ana-head">✈ 機票資訊（台北 → 赫爾辛基）</div>
+      <div class="ana-body" style="padding:12px 14px">
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+          <div style="padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;margin-bottom:3px">TPE → HEL（赫爾辛基 Helsinki）</div>
+            <div style="color:var(--muted);font-size:11px">Finnair 直飛（香港/大阪/仁川轉機）約 16–18h · 四國中最便宜、班次最多</div>
+            <div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">
+              <span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:1px 8px;border-radius:8px">經濟艙 ~6,000–17,000 TWD/人</span>
+              <span style="font-size:10px;background:#ecfdf5;border:1px solid var(--fi-border);color:var(--fi);padding:1px 8px;border-radius:8px">北歐四國最便宜選項</span>
+            </div>
+          </div>
+          <div style="padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
+            <div style="font-weight:700;color:#92400e;margin-bottom:3px">HEL → RVN（Rovaniemi）&nbsp;<span style="font-weight:400;color:var(--muted)">Finnair 每日 / Norwegian 週五日</span></div>
+            <div style="color:var(--muted);font-size:11px">1h 23m · 聖誕老人村/馴鹿農場集中地</div>
+            <div style="margin-top:4px;font-weight:700;color:#92400e;font-size:11px">約 TWD 1,400–5,100 / 人</div>
+          </div>
+          <div style="padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
+            <div style="font-weight:700;color:#92400e;margin-bottom:3px">HEL → IVL（Ivalo）&nbsp;<span style="font-weight:400;color:var(--muted)">Finnair · 更北更深</span></div>
+            <div style="color:var(--muted);font-size:11px">1h 52m · Kakslauttanen 玻璃屋在 Ivalo 附近 Saariselkä · 極光勝率更高</div>
+            <div style="margin-top:4px;font-weight:700;color:#92400e;font-size:11px">約 TWD 2,200–8,900 / 人（旺季貴）</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:2px">國際線 2人（來回估）</div>
+            <div style="font-weight:900;font-size:16px;color:var(--fi)">~24,000–68,000</div>
+            <div style="color:var(--muted2);font-size:10px">TWD</div>
+          </div>
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:2px">國內線 2人（來回）</div>
+            <div style="font-weight:900;font-size:16px;color:var(--fi)">~5,600–35,600</div>
+            <div style="color:var(--muted2);font-size:10px">TWD（視 RVN 或 IVL）</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px">
+          💡 芬蘭是台灣出發四國中機票最便宜的選項。Finnair 從香港/仁川/大阪轉機，無需中國簽證，總飛行約 16–18h。玻璃屋請至少提前 <strong>1年</strong> 預訂（Kakslauttanen 嚴重供不應求）。
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:12px">
+    <div class="ana-block" style="margin-bottom:0">
+      <div class="ana-head">⚖️ 優缺點</div>
+      <div class="ana-body">
+        <div class="pros-cons">
+          <div class="pc-block pros">
+            <div class="pc-title">優點</div>
+            <div class="pc-item">玻璃屋體驗最夢幻</div>
+            <div class="pc-item">雪橇犬 + 馴鹿最齊全</div>
+            <div class="pc-item">赫爾辛基有直達北部班機</div>
+            <div class="pc-item">整體較緊湊，7–8天夠用</div>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-title">缺點</div>
+            <div class="pc-item">玻璃屋極難訂到（需1年前）</div>
+            <div class="pc-item">10月積雪仍不足（雪橇犬無法）</div>
+            <div class="pc-item">地景相對單調（森林為主）</div>
+            <div class="pc-item">需 11月後才進入最佳狀態</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#ecfdf5;border:1px solid var(--fi-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--fi);margin-bottom:8px">🔗 組合可能性</div>
+      <strong style="color:var(--fi)">芬蘭 + 瑞典（11月起）：</strong>HEL → Saariselkä（玻璃屋）→ 飛 ARN → Abisko（天空站），兩國極光聖地一次打包，約 14–16 天可行。<br><br>
+      <strong style="color:var(--fi)">芬蘭 + 挪威（10月）：</strong>機票貴，轉機多，不如挪威單獨做完整。
+    </div>
+    </div><!-- /two-col-grid -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ ICELAND ══════════════════════════════════════ -->
+<div id="view-iceland" class="view">
+  <div class="page-header">
+    <button class="btn-back" onclick="nav('home')">←</button>
+    <span class="page-flag">🇮🇸</span>
+    <span class="page-title">冰島 Iceland</span>
+    <span class="page-sub">分析</span>
+  </div>
+  <div class="detail-body">
+    <div class="country-hero ch-is">
+      <div class="ch-stat"><div class="ch-stat-val">8</div><div class="ch-stat-label">建議天數</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">★×4</div><div class="ch-stat-label">極光強度</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">9月–3月</div><div class="ch-stat-label">最佳月份</div></div>
+      <div class="ch-stat"><div class="ch-stat-val">自駕</div><div class="ch-stat-label">推薦交通</div></div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:12px">
+    <div class="ana-block" style="margin-bottom:0">
+      <div class="ana-head">✨ 最大特色</div>
+      <div class="ana-body">
+        <div class="ana-row">
+          <div class="ana-row-icon">🌋</div>
+          <div class="ana-row-main"><div class="ana-row-name">地質奇景（全球唯一）</div><div class="ana-row-note">黃金圈 · 黑沙灘 · 極光 + 火山 · 瀑布 · 間歇泉</div></div>
+          <span class="ana-row-tag tag-must">差異化</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🚗</div>
+          <div class="ana-row-main"><div class="ana-row-name">自駕環島</div><div class="ana-row-note">1號公路繞島 · 彈性極高 · 需要租車 + 雪胎</div></div>
+          <span class="ana-row-tag tag-info">自駕為主</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🏊</div>
+          <div class="ana-row-main"><div class="ana-row-name">藍湖溫泉 Blue Lagoon</div><div class="ana-row-note">標誌性體驗 · 機場附近 · 需提前訂</div></div>
+          <span class="ana-row-tag tag-book">必訂</span>
+        </div>
+        <div class="ana-row">
+          <div class="ana-row-icon">🌌</div>
+          <div class="ana-row-main"><div class="ana-row-name">極光觀賞</div><div class="ana-row-note">天氣多變是最大變數 · 但全島無光害地點多</div></div>
+          <span class="ana-row-tag tag-warn">天氣依賴</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f5f3ff;border:1px solid var(--is-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--is);margin-bottom:8px">🚗 自駕建議路線</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D1–2</span><span>Reykjavik → Blue Lagoon → 黃金圈</span></div>
+        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D3–4</span><span>南岸：Seljalandsfoss → Vík → 黑沙灘</span></div>
+        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D5–6</span><span>Jökulsárlón 冰河湖 → Vatnajökull 冰川</span></div>
+        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D7–8</span><span>北部 Akureyri → Húsavík 賞鯨</span></div>
+      </div>
+    </div>
+    </div><!-- /two-col-grid -->
+
+    <!-- 機票資訊：冰島 -->
+    <div class="ana-block" style="margin-bottom:14px">
+      <div class="ana-head">✈ 機票資訊（台北 → 雷克雅維克）</div>
+      <div class="ana-body" style="padding:12px 14px">
+        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
+          <div style="padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;margin-bottom:3px">TPE → KEF（雷克雅維克 Keflavik）</div>
+            <div style="color:var(--muted);font-size:11px">無直飛，需經 AMS（阿姆斯特丹）或 LHR（倫敦）轉 Icelandair，約 21–25h · 四國中最貴且班次最少</div>
+            <div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">
+              <span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:1px 8px;border-radius:8px">經濟艙 ~13,800–27,600 TWD/人</span>
+              <span style="font-size:10px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;padding:1px 8px;border-radius:8px">四國中機票最貴</span>
+            </div>
+          </div>
+          <div style="padding:8px 12px;background:#ecfdf5;border:1px solid var(--fi-border);border-radius:8px;font-size:12px">
+            <div style="font-weight:700;color:var(--fi);margin-bottom:3px">冰島境內不需國內線 · 全程自駕</div>
+            <div style="color:var(--muted);font-size:11px">KEF 機場即在雷克雅維克附近 · 租車自駕 1 號環島公路 · 需雪胎（10月起）</div>
+            <div style="margin-top:4px;font-size:11px;color:var(--muted)">租車約 TWD 2,500–5,000/天（含雪胎、保險）</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div style="padding:10px;border:2px solid #e879f9;border-radius:8px;font-size:11px;text-align:center;background:#fdf4ff">
+            <div style="color:#86198f;font-weight:700;margin-bottom:2px">國際線 2人（來回估）</div>
+            <div style="font-weight:900;font-size:16px;color:#a21caf">~55,000–110,000</div>
+            <div style="color:var(--muted2);font-size:10px">TWD（四國最高）</div>
+          </div>
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:2px">租車（8天估）</div>
+            <div style="font-weight:900;font-size:16px;color:var(--is)">~40,000–80,000</div>
+            <div style="color:var(--muted2);font-size:10px">TWD（2人共攤）</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px">
+          ⚠ 冰島機票最貴、轉機最多（需在 AMS 或 LHR 轉 Icelandair），且冬季自駕有天氣風險。強烈建議提前訂好 Blue Lagoon（機場旁，早/晚各一段適合）和黃金圈行程。
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col-grid" style="margin-bottom:12px">
+    <div class="ana-block" style="margin-bottom:0">
+      <div class="ana-head">⚖️ 優缺點</div>
+      <div class="ana-body">
+        <div class="pros-cons">
+          <div class="pc-block pros">
+            <div class="pc-title">優點</div>
+            <div class="pc-item">地景豐富度遠超其他國</div>
+            <div class="pc-item">自駕自由度高</div>
+            <div class="pc-item">9月即可看極光</div>
+            <div class="pc-item">可獨立成 10天行程</div>
+          </div>
+          <div class="pc-block cons">
+            <div class="pc-title">缺點</div>
+            <div class="pc-item">天氣極度多變，極光機率不穩</div>
+            <div class="pc-item">物價與挪威同等高</div>
+            <div class="pc-item">缺乏「文化體驗」（馴鹿等）</div>
+            <div class="pc-item">冬季自駕有一定風險</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f5f3ff;border:1px solid var(--is-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--is);margin-bottom:8px">🎯 定位建議</div>
+      冰島是「<strong>地景旅行附加極光</strong>」，而非「極光旅行附加地景」。<br><br>
+      主目標極光 → 挪威成功率和配套更完整。<br>
+      主目標獨特地貌 → 冰島是最佳選擇，建議作為<strong>第二趟北歐行</strong>。<br><br>
+      <strong style="color:var(--is)">與挪威組合（14天）：</strong>Tromsø 5晚 + 飛 KEF + 冰島 6晚，兩者均 10月適合，是四國組合中最合理的選項。
+    </div>
+    </div><!-- /two-col-grid -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ MAP VIEW ══════════════════════════════════════ -->
+<div id="view-map" class="view">
+  <!-- Topbar -->
+  <div id="mv-topbar">
+    <button class="mv-btn mv-btn-back" onclick="nav('home')">📊 提案分析</button>
+    <div class="mv-logo">路線地圖<span>.</span></div>
+    <span style="font-size:10px;color:#334155">2027 · 極光行</span>
+    <div class="mv-sep"></div>
+    <button class="mv-btn mv-btn-ghost mv-active" id="mv-btn-route" onclick="mvToggleRoute()">🛫 路線圖</button>
+    <button class="mv-btn mv-btn-primary" id="mv-btn-add" onclick="mvToggleAdd()">＋ 新增城市</button>
+  </div>
+  <!-- Sidebar toggle -->
+  <div id="mv-toggle" onclick="mvToggleSidebar()">‹</div>
+  <!-- Sidebar -->
+  <div id="mv-sidebar">
+    <div class="mv-sb-head">
+      <div class="mv-sb-title">行程順序</div>
+      <div class="mv-sb-summary" id="mv-summary">計算中…</div>
+    </div>
+    <div class="mv-sb-list" id="mv-list"></div>
+  </div>
+  <!-- Map container -->
+  <div id="mv-map"></div>
+  <!-- Hover card -->
+  <div id="mv-hcard">
+    <div class="mv-hc-days" id="mv-hc-days"></div>
+    <div class="mv-hc-name" id="mv-hc-name"></div>
+    <div class="mv-hc-sub"  id="mv-hc-sub"></div>
+    <div class="mv-hc-sec" id="mv-hc-hl-wrap"><div class="mv-hc-lbl">景點</div><div id="mv-hc-hl"></div></div>
+    <div class="mv-hc-sec" id="mv-hc-fd-wrap"><div class="mv-hc-lbl">美食</div><div id="mv-hc-fd"></div></div>
+    <div class="mv-hc-sec" id="mv-hc-ex-wrap"><div class="mv-hc-lbl">體驗</div><div id="mv-hc-ex"></div></div>
+  </div>
+  <!-- Add form -->
+  <div id="mv-aform">
+    <div class="mv-form-title">新增城市</div>
+    <div id="mv-acoords" style="font-size:10px;color:#334155;margin-bottom:8px"></div>
+    <label class="mv-form-lbl">城市名稱（中文）</label>
+    <input class="mv-form-inp" id="mv-fname" type="text" placeholder="例：羅浮敦">
+    <label class="mv-form-lbl">英文名 / 國家</label>
+    <input class="mv-form-inp" id="mv-fnamen" type="text" placeholder="Lofoten · Norway">
+    <label class="mv-form-lbl">停留天數</label>
+    <input class="mv-form-inp" id="mv-fdays" type="number" placeholder="3" min="1" max="20">
+    <label class="mv-form-lbl">景點（換行分隔）</label>
+    <textarea class="mv-form-inp" id="mv-fhl" placeholder="Reine 峽灣&#10;Henningsvær 漁村"></textarea>
+    <label class="mv-form-lbl">美食 / 體驗（換行分隔）</label>
+    <textarea class="mv-form-inp" id="mv-ffd" placeholder="鱈魚料理&#10;極光觀賞" style="min-height:50px"></textarea>
+    <div class="mv-form-row">
+      <button class="mv-btn mv-btn-cancel" onclick="mvCancelAdd()">取消</button>
+      <button class="mv-btn mv-btn-primary" onclick="mvSaveCity()">加入地圖</button>
+    </div>
+  </div>
+  <!-- Add hint -->
+  <div id="mv-hint">點擊地圖新增城市節點</div>
+  <!-- Legend -->
+  <div id="mv-legend">
+    <div class="mv-leg-row"><div class="mv-leg-line mv-leg-flight"></div><span>航班</span></div>
+    <div class="mv-leg-row"><div class="mv-leg-line mv-leg-ship"></div><span>郵輪</span></div>
+  </div>
+</div>
+
+<script>
+/* ── Navigation ── */
+function nav(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = id === 'home' ? document.getElementById('home') : document.getElementById('view-' + id);
+  if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+  hideTooltip();
+  if (id === 'map') { mvInitOnce(); document.body.style.overflow = 'hidden'; }
+  else { document.body.style.overflow = ''; }
+}
+
+/* ── Map tooltip data ── */
+const COUNTRY_DATA = {
+  norway:  { flag:'🇳🇴', name:'挪威', en:'Norway',  days:'12–15天', aurora:'★★★★★', highlight:'Oslo · Lofoten峽灣 · Tromsø極光 · 冰川健行', page:'norway'  },
+  sweden:  { flag:'🇸🇪', name:'瑞典', en:'Sweden',  days:'7–10天',  aurora:'★★★★',  highlight:'Abisko天空站 · ICEHOTEL · 雪橇犬', page:'sweden'  },
+  finland: { flag:'🇫🇮', name:'芬蘭', en:'Finland', days:'7–10天',  aurora:'★★★★',  highlight:'極光玻璃屋 · 雪橇犬 · 馴鹿農場', page:'finland' },
+  iceland: { flag:'🇮🇸', name:'冰島', en:'Iceland', days:'7–10天',  aurora:'★★★★',  highlight:'黃金圈 · 黑沙灘 · 環島自駕', page:'iceland' },
+};
+
+const tooltip = document.getElementById('map-tooltip');
+let currentCountry = null;
+let tooltipTarget = null;
+
+function showTooltip(country, x, y) {
+  const d = COUNTRY_DATA[country];
+  if (!d) return;
+  document.getElementById('tt-flag').textContent = d.flag;
+  document.getElementById('tt-name').textContent = d.name;
+  document.getElementById('tt-name-en').textContent = d.en;
+  document.getElementById('tt-days').textContent = d.days;
+  document.getElementById('tt-aurora').textContent = d.aurora;
+  document.getElementById('tt-highlight').textContent = d.highlight;
+  document.getElementById('tt-btn').onclick = () => nav(d.page);
+  positionTooltip(x, y);
+  tooltip.classList.remove('hidden');
+  currentCountry = country;
+}
+
+function positionTooltip(x, y) {
+  const tw = 210, th = 165;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let left = x + 14, top = y - 20;
+  if (left + tw > vw - 10) left = x - tw - 14;
+  if (top + th > vh - 10) top = vh - th - 10;
+  if (top < 10) top = 10;
+  tooltip.style.left = left + 'px';
+  tooltip.style.top  = top  + 'px';
+}
+
+function hideTooltip() {
+  tooltip.classList.add('hidden');
+  currentCountry = null;
+  document.querySelectorAll('.country-path').forEach(p => p.classList.remove('active-country'));
+}
+
+/* ── Bind SVG map events ── */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.country-node').forEach(node => {
+    const country = node.dataset.country;
+
+    node.addEventListener('mouseenter', e => {
+      document.querySelectorAll('.country-node').forEach(p => p.classList.remove('active-country'));
+      node.classList.add('active-country');
+      showTooltip(country, e.clientX, e.clientY);
+    });
+
+    node.addEventListener('mousemove', e => {
+      if (currentCountry === country) positionTooltip(e.clientX, e.clientY);
+    });
+
+    node.addEventListener('mouseleave', () => {
+      node.classList.remove('active-country');
+      hideTooltip();
+    });
+
+    node.addEventListener('click', () => nav(COUNTRY_DATA[country]?.page));
+  });
+
+  document.addEventListener('click', e => {
+    if (!e.target.classList.contains('country-node') && !tooltip.contains(e.target)) {
+      hideTooltip();
+    }
+  });
+});
+
+/* ══════════════════════════════════════
+   ITINERARY NODE GRAPH
+══════════════════════════════════════ */
+const ITIN_PH = {
+  travel:  { label:'出發',         color:'#64748b' },
+  oslo:    { label:'奧斯陸',       color:'#8b5cf6' },
+  lofoten: { label:'羅浮敦',       color:'#0ea5e9' },
+  ship:    { label:'Hurtigruten',  color:'#06b6d4' },
+  tromso:  { label:'特羅姆瑟',     color:'#f59e0b' },
+  home:    { label:'返程',         color:'#10b981' },
+};
+const ITIN_CT = [
+  { key:'flight', icon:'✈', label:'飛機', color:'#0ea5e9' },
+  { key:'ship',   icon:'⛴', label:'郵輪', color:'#06b6d4' },
+  { key:'drive',  icon:'🚗', label:'開車', color:'#94a3b8' },
+  { key:'train',  icon:'🚂', label:'火車', color:'#f59e0b' },
+];
+const ITIN_BASE = new Date(2027, 9, 9); // Oct 9
+const DOW = ['日','一','二','三','四','五','六'];
+
+let itinHistory = [];
+let itinHistIdx  = -1;
+const ITIN_HIST_MAX = 40;
+
+function itinPush() {
+  itinHistory = itinHistory.slice(0, itinHistIdx + 1);
+  itinHistory.push(JSON.stringify({ nodes: itinNodes, edges: itinEdges }));
+  if (itinHistory.length > ITIN_HIST_MAX) itinHistory.shift();
+  itinHistIdx = itinHistory.length - 1;
+}
+
+function itinUndo() {
+  if (itinHistIdx <= 0) return;
+  itinHistIdx--;
+  const s = JSON.parse(itinHistory[itinHistIdx]);
+  itinNodes = s.nodes; itinEdges = s.edges;
+  renderItinFlow();
+}
+
+function itinRedo() {
+  if (itinHistIdx >= itinHistory.length - 1) return;
+  itinHistIdx++;
+  const s = JSON.parse(itinHistory[itinHistIdx]);
+  itinNodes = s.nodes; itinEdges = s.edges;
+  renderItinFlow();
+}
+
+let itinNodes = [
+  { emoji:'🛫', name:'桃園', nights:0, phase:'travel', fixed:true,
+    days:[{acts:['EK387 00:30 出發'], hotel:''}]},
+  { emoji:'🏙', name:'奧斯陸', nights:2, phase:'oslo',
+    days:[
+      {acts:['抵 Oslo 12:35','市區散步'], hotel:''},
+      {acts:['Vigeland 公園','博物館','浮式桑拿'], hotel:''},
+    ]},
+  { emoji:'🏔', name:'羅浮敦', nights:4, phase:'lofoten',
+    days:[
+      {acts:['飛 Svolvær','Henningsvær 漫步'], hotel:''},
+      {acts:['E10 南下','抵 Reine'], hotel:''},
+      {acts:['Reinebringen 健行'], hotel:''},
+      {acts:['Å 來回','漁村探索'], hotel:''},
+    ]},
+  { emoji:'🚢', name:'Hurtigruten', nights:1, phase:'ship',
+    days:[{acts:['Hamnøy 晨景','開回 Svolvær','傍晚登船'], hotel:''}]},
+  { emoji:'🌌', name:'特羅姆瑟', nights:5, phase:'tromso',
+    days:[
+      {acts:['傍晚抵 Tromsø','極光 Tour 初夜'], hotel:''},
+      {acts:['Lyngen Alps 冰川健行'], hotel:''},
+      {acts:['北極大教堂','Fjellheisen 纜車'], hotel:''},
+      {acts:['極光遊輪','備用日'], hotel:''},
+      {acts:['整理行李','最後極光夜'], hotel:''},
+    ]},
+  { emoji:'🏠', name:'返程', nights:0, phase:'home', fixed:true,
+    days:[
+      {acts:['TOS → OSL','EK160 14:35 出發'], hotel:''},
+      {acts:['抵台 16:15 🎉'], hotel:''},
+    ]},
+];
+let itinEdges = [
+  { type:'flight', time:'14h · EK387+159' },
+  { type:'flight', time:'2h · OSL→SVJ'   },
+  { type:'drive',  time:'2.5h 回 Svolvær' },
+  { type:'ship',   time:'~20h Hurtigruten'},
+  { type:'flight', time:'2h · TOS→OSL'   },
+];
+
+function itinNodeDays(n) {
+  if (n.phase === 'home') return 2;
+  if (n.phase === 'travel') return 1;
+  return n.nights || 1;
+}
+
+function itinSyncDays(node) {
+  const need = itinNodeDays(node);
+  if (!node.days) node.days = [];
+  while (node.days.length < need) node.days.push({ acts:[''], hotel:'' });
+  node.days = node.days.slice(0, need);
+  return node.days;
+}
+
+function itinComputeMeta() {
+  let day = 1;
+  return itinNodes.map(n => {
+    const d = itinNodeDays(n);
+    const start = new Date(ITIN_BASE.getTime() + (day-1)*86400000);
+    const end   = new Date(ITIN_BASE.getTime() + (day+d-2)*86400000);
+    const fmt = x => `${x.getMonth()+1}/${x.getDate()}`;
+    const startD = day; day += d;
+    const dateStr = d === 1
+      ? `D${startD} · ${fmt(start)}`
+      : `D${startD}–${startD+d-1} · ${fmt(start)}–${fmt(end)}`;
+    return { dateStr, startDay: startD, startDate: start };
+  });
+}
+
+function itinTotalDays() {
+  return itinNodes.reduce((s,n) => s + itinNodeDays(n), 0);
+}
+
+function renderItinFlow() {
+  const el = document.getElementById('itin-flow');
+  if (!el) return;
+  const meta = itinComputeMeta();
+  const total = itinTotalDays();
+
+  const canUndo = itinHistIdx > 0;
+  const canRedo = itinHistIdx < itinHistory.length - 1;
+  let html = `<div class="itin-summary-bar">
+    ${itinNodes.map(n => {
+      const ph = ITIN_PH[n.phase]; const d = itinNodeDays(n);
+      return `<span style="color:${ph.color};font-weight:700">${n.name}<span style="opacity:.55;font-weight:400"> ${d}d</span></span>`;
+    }).join('<span style="opacity:.25;margin:0 1px">·</span>')}
+    <span class="isb-total">合計 ${total} 天</span>
+    <button class="itin-hist-btn" onclick="itinUndo()" title="上一步 (Ctrl+Z)" ${canUndo?'':'disabled'}>↩</button>
+    <button class="itin-hist-btn" onclick="itinRedo()" title="下一步 (Ctrl+Y)" ${canRedo?'':'disabled'}>↪</button>
+  </div>`;
+
+  itinNodes.forEach((node, i) => {
+    const ph   = ITIN_PH[node.phase] || ITIN_PH.home;
+    const m    = meta[i];
+    const days = itinSyncDays(node);
+    const canDel = !node.fixed && itinNodes.length > 2;
+    const canAdj = !node.fixed;
+    const igb  = `color-mix(in srgb,${ph.color} 28%,var(--border))`;
+    const igl  = `color-mix(in srgb,${ph.color} 5%,var(--surface))`;
+    const hasHotel = node.nights > 0;
+
+    /* ── LEFT column ── */
+    let leftHtml = `<div class="ign-emoji">${node.emoji}</div>
+      <input class="ign-name" value="${node.name.replace(/"/g,'&quot;')}"
+        onblur="itinSaveName(${i},this)" onkeydown="if(event.key==='Enter')this.blur()">
+      <div class="ign-dates">${m.dateStr}</div>`;
+    if (canAdj) {
+      leftHtml += `<div class="ign-nights">
+        <button class="ign-nb" onclick="itinAdjNights(${i},-1)">−</button>
+        <span class="ign-nv">${node.nights}</span>
+        <button class="ign-nb" onclick="itinAdjNights(${i},1)">＋</button>
+        <span style="font-size:9px;color:var(--muted)">晚</span>
+      </div>`;
+    }
+    if (canDel) {
+      leftHtml += `<button class="ign-del" onclick="itinDelNode(${i})">✕ 刪除</button>`;
+    }
+
+    /* ── RIGHT column ── */
+    let rightHtml = '';
+    const htlPh = node.phase === 'ship' ? '船艙類型…' : '住宿名稱…';
+    days.forEach((day, di) => {
+      const d = new Date(m.startDate.getTime() + di*86400000);
+      const hd = `D${m.startDay+di} · ${d.getMonth()+1}/${d.getDate()} ${DOW[d.getDay()]}`;
+      const htl = (day.hotel||'').replace(/"/g,'&quot;');
+      const canDelDay = canAdj && days.length > 1;
+      const acts = Array.isArray(day.acts) ? day.acts : (day.act ? [day.act] : ['']);
+
+      /* Activity node chain */
+      let actsHtml = '';
+      acts.forEach((a, ai) => {
+        const av = (a||'').replace(/"/g,'&quot;');
+        const sz = Math.max(4, (a||'').length || 4);
+        if (ai > 0) actsHtml += `<span class="igd-act-arrow">→</span>`;
+        actsHtml += `<span class="igd-act-node">
+          <span class="igd-act-sizer" data-val="${av}">
+            <input class="igd-act-inp" value="${av}" placeholder="活動…"
+              oninput="this.parentNode.dataset.val=this.value"
+              onblur="itinSaveAct(${i},${di},${ai},this)"
+              onkeydown="if(event.key==='Enter')this.blur()">
+          </span>
+          ${acts.length > 1
+            ? `<button class="igd-act-del" onclick="itinDelAct(${i},${di},${ai})">✕</button>`
+            : ''}
+        </span>`;
+      });
+      actsHtml += `<button class="igd-act-add" onclick="itinAddAct(${i},${di})" title="新增活動">＋</button>`;
+
+      rightHtml += `<div class="ig-day">
+        <div class="igd-hd">${hd}${canDelDay
+          ? `<button class="igd-del" onclick="itinDelDay(${i},${di})" title="刪除此天">✕</button>`
+          : ''}</div>
+        <div class="igd-acts">${actsHtml}</div>
+      </div>`;
+      if (hasHotel) {
+        rightHtml += `<div class="igd-hotel">
+          <span class="igh-icon">🛏</span>
+          <input class="igh-inp" value="${htl}" placeholder="${htlPh}"
+            onchange="itinNodes[${i}].days[${di}].hotel=this.value">
+        </div>`;
+      }
+    });
+    if (canAdj) {
+      rightHtml += `<button class="igd-add" onclick="itinAddDay(${i})">
+        <span class="igd-add-icon">＋</span>新增一天
+      </button>`;
+    }
+
+    html += `<div class="ig-row" style="--nc:${ph.color};--igb:${igb};--igl:${igl}">
+      <div class="ig-left">${leftHtml}</div>
+      <div class="ig-right">${rightHtml}</div>
+    </div>`;
+
+    /* ── Edge between phases ── */
+    if (i < itinNodes.length - 1) {
+      const e  = itinEdges[i];
+      const ct = ITIN_CT.find(t=>t.key===e.type)||ITIN_CT[0];
+      html += `<div class="ig-edge-row">
+        <div class="ig-er-l">
+          <div class="ie2-line"></div>
+          <button class="ie2-badge" style="--cc:${ct.color}" onclick="itinCycleEdge(${i})">${ct.icon} ${ct.label}</button>
+          <div class="ie2-line"></div>
+        </div>
+        <div class="ig-er-r">
+          <input class="ie2-time" value="${e.time.replace(/"/g,'&quot;')}" placeholder="時間 / 距離"
+            onchange="itinEdges[${i}].time=this.value">
+          <button class="ie2-add" onclick="itinAddNode(${i+1})" title="插入節點">＋</button>
+        </div>
+      </div>`;
+    }
+  });
+
+  el.innerHTML = html;
+}
+
+function itinSaveName(i, el) {
+  const v = el.value.trim();
+  if (!v) el.value = itinNodes[i].name;
+  else itinNodes[i].name = v;
+}
+
+function itinAdjNights(i, delta) {
+  const n = itinNodes[i];
+  if (n.fixed) return;
+  itinPush();
+  n.nights = Math.max(1, (n.nights||1) + delta);
+  itinSyncDays(n);
+  renderItinFlow();
+}
+
+function itinCycleEdge(i) {
+  itinPush();
+  const keys = ITIN_CT.map(t=>t.key);
+  itinEdges[i].type = keys[(keys.indexOf(itinEdges[i].type)+1)%keys.length];
+  renderItinFlow();
+}
+
+function itinDelNode(i) {
+  if (itinNodes[i].fixed || itinNodes.length <= 2) return;
+  itinPush();
+  const lt = itinEdges[i-1], rt = itinEdges[i];
+  if (lt && rt) { lt.time = [lt.time, rt.time].filter(Boolean).join(' + '); }
+  itinNodes.splice(i,1);
+  itinEdges.splice(Math.min(i, itinEdges.length-1), 1);
+  renderItinFlow();
+}
+
+function itinAddNode(insertAt) {
+  itinPush();
+  const prevPhase = itinNodes[insertAt-1]?.phase || 'oslo';
+  itinNodes.splice(insertAt, 0, {
+    emoji:'📍', name:'新地點', nights:1, phase: prevPhase, fixed: false,
+    days:[{acts:[''], hotel:''}]
+  });
+  itinEdges.splice(insertAt, 0, { type:'drive', time:'—' });
+  renderItinFlow();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#itin-flow .ign-name');
+    if (inputs[insertAt]) { inputs[insertAt].focus(); inputs[insertAt].select(); }
+  }, 30);
+}
+
+function itinSaveAct(ni, di, ai, el) {
+  const day = itinNodes[ni]?.days?.[di];
+  if (!day) return;
+  if (!Array.isArray(day.acts)) day.acts = [day.acts||''];
+  day.acts[ai] = el.value;
+}
+
+function itinDelAct(ni, di, ai) {
+  const day = itinNodes[ni]?.days?.[di];
+  if (!day || !Array.isArray(day.acts) || day.acts.length <= 1) return;
+  itinPush();
+  day.acts.splice(ai, 1);
+  renderItinFlow();
+}
+
+function itinAddAct(ni, di) {
+  const day = itinNodes[ni]?.days?.[di];
+  if (!day) return;
+  itinPush();
+  if (!Array.isArray(day.acts)) day.acts = [day.acts||''];
+  day.acts.push('');
+  renderItinFlow();
+  setTimeout(() => {
+    const rows = document.querySelectorAll('#itin-flow .ig-row');
+    if (!rows[ni]) return;
+    const dayDivs = rows[ni].querySelectorAll('.ig-day');
+    if (!dayDivs[di]) return;
+    const inps = dayDivs[di].querySelectorAll('.igd-act-inp');
+    if (inps.length) inps[inps.length-1].focus();
+  }, 30);
+}
+
+function itinDelDay(ni, di) {
+  const n = itinNodes[ni];
+  if (!n || n.fixed || (n.days||[]).length <= 1) return;
+  itinPush();
+  n.days.splice(di, 1);
+  if (n.nights > 0) n.nights = Math.max(1, n.nights - 1);
+  renderItinFlow();
+}
+
+function itinAddDay(ni) {
+  const n = itinNodes[ni];
+  if (!n || n.fixed) return;
+  itinPush();
+  if (!n.days) n.days = [];
+  n.days.push({ acts:[''], hotel:'' });
+  if (n.nights >= 0) n.nights++;
+  renderItinFlow();
+  setTimeout(() => {
+    const rows = document.querySelectorAll('#itin-flow .ig-row');
+    const row = rows[ni];
+    if (row) {
+      const acts = row.querySelectorAll('.igd-act');
+      const last = acts[acts.length-1];
+      if (last) { last.focus(); }
+    }
+  }, 30);
+}
+
+function initItinBoard() {
+  itinPush(); // baseline snapshot
+  renderItinFlow();
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') { e.preventDefault(); itinUndo(); }
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); itinRedo(); }
+  });
+}
+
+/* ══════════════════════════════════════
+   EMBED MAP (read-only, home page)
+══════════════════════════════════════ */
+const EM_COLORS      = { NO:'#0ea5e9', SE:'#6366f1', FI:'#10b981', IS:'#8b5cf6', DEFAULT:'#64748b' };
+const EM_CONN_COLORS = { flight:'#0ea5e9', ship:'#34d399', drive:'#94a3b8', train:'#f59e0b' };
+const EM_CONN_DASH   = { flight:[10,6], ship:[3,7], drive:null, train:[6,4] };
+const EM_OVERVIEW_ID = '__overview__';
+
+const EM_DEFAULT_PROJECTS = [
+  { id:'proj_norway', name:'🇳🇴 挪威',
+    cities:[
+      { name:'奧斯陸',   country:'NO', lat:59.9139, lng:10.7522, order:0 },
+      { name:'羅浮敦',   country:'NO', lat:68.135,  lng:13.595,  order:1 },
+      { name:'特羅姆瑟', country:'NO', lat:69.6492, lng:18.9553, order:2 },
+    ],
+    connections:[{fromIdx:0,toIdx:1,type:'flight'},{fromIdx:1,toIdx:2,type:'ship'}] },
+  { id:'proj_sweden', name:'🇸🇪 瑞典',
+    cities:[
+      { name:'斯德哥爾摩', country:'SE', lat:59.3293, lng:18.0686, order:0 },
+      { name:'基律納',     country:'SE', lat:67.8554, lng:20.2253, order:1 },
+      { name:'阿比斯庫',   country:'SE', lat:68.3501, lng:18.8305, order:2 },
+    ],
+    connections:[{fromIdx:0,toIdx:1,type:'flight'},{fromIdx:1,toIdx:2,type:'drive'}] },
+  { id:'proj_finland', name:'🇫🇮 芬蘭',
+    cities:[
+      { name:'赫爾辛基',   country:'FI', lat:60.1699, lng:24.9384, order:0 },
+      { name:'羅瓦涅米',   country:'FI', lat:66.5039, lng:25.7294, order:1 },
+      { name:'薩利色爾卡', country:'FI', lat:68.4235, lng:27.4122, order:2 },
+    ],
+    connections:[{fromIdx:0,toIdx:1,type:'flight'},{fromIdx:1,toIdx:2,type:'drive'}] },
+  { id:'proj_iceland', name:'🇮🇸 冰島',
+    cities:[
+      { name:'雷克雅維克', country:'IS', lat:64.1466, lng:-21.9426, order:0 },
+      { name:'黃金圈',     country:'IS', lat:64.3271, lng:-20.1199, order:1 },
+      { name:'南海岸',     country:'IS', lat:63.5322, lng:-19.0136, order:2 },
+      { name:'阿克雷里',   country:'IS', lat:65.6835, lng:-18.0878, order:3 },
+    ],
+    connections:[{fromIdx:0,toIdx:1,type:'drive'},{fromIdx:1,toIdx:2,type:'drive'},{fromIdx:2,toIdx:3,type:'drive'}] },
+];
+
+let emMap = null;
+let emOverlay = [];
+let emActiveProjId = 'proj_norway';
+
+function getEmProjects() {
+  try {
+    const d = JSON.parse(localStorage.getItem('aurora_proj_v2') || 'null');
+    if (d?.projects?.length) {
+      const merged = [...EM_DEFAULT_PROJECTS];
+      const existIds = new Set(merged.map(p=>p.id));
+      d.projects.forEach(p => { if (!existIds.has(p.id)) merged.push(p); });
+      const fromStorage = merged.map(dp => {
+        const stored = d.projects.find(p=>p.id===dp.id);
+        return stored || dp;
+      });
+      return { projects: fromStorage, activeId: d.activeId || 'proj_norway' };
+    }
+  } catch(e){}
+  return { projects: EM_DEFAULT_PROJECTS, activeId: 'proj_norway' };
+}
+
+function clearEmLayers() {
+  emOverlay.forEach(l => { try { emMap.removeLayer(l); } catch(e){} });
+  emOverlay = [];
+}
+
+function renderEmTabs() {
+  const { projects } = getEmProjects();
+  const el = document.getElementById('em-tabs');
+  if (!el) return;
+  el.innerHTML = '';
+  const addTab = (id, label) => {
+    const btn = document.createElement('button');
+    btn.className = 'em-tab' + (emActiveProjId === id ? ' active' : '');
+    btn.textContent = label;
+    btn.onclick = () => { emActiveProjId = id; renderEmTabs(); emActiveProjId === EM_OVERVIEW_ID ? renderEmOverview() : renderEmProj(emActiveProjId); };
+    el.appendChild(btn);
+  };
+  addTab(EM_OVERVIEW_ID, '🗺 全覽');
+  projects.forEach(p => addTab(p.id, p.name));
+}
+
+function renderEmProj(projId) {
+  clearEmLayers();
+  const { projects } = getEmProjects();
+  const proj = projects.find(p=>p.id===projId);
+  if (!proj) return;
+  const cities = (proj.cities||[]).filter(c=>!c._deleted).sort((a,b)=>a.order-b.order);
+  const conns  = proj.connections||[];
+  for (let i=0; i<cities.length-1; i++) {
+    const a=cities[i], b=cities[i+1];
+    const conn = conns.find(c=>c.fromIdx===i&&c.toIdx===i+1) || {type:'flight'};
+    const col  = EM_CONN_COLORS[conn.type]||EM_CONN_COLORS.flight;
+    const dash = EM_CONN_DASH[conn.type];
+    const opts = {color:col, weight:2.2, opacity:0.75};
+    if (dash) opts.dashArray = dash.join(',');
+    emOverlay.push(L.polyline([[a.lat,a.lng],[b.lat,b.lng]], opts).addTo(emMap));
+  }
+  cities.forEach((city, i) => {
+    const color = EM_COLORS[city.country]||EM_COLORS.DEFAULT;
+    const icon = L.divIcon({
+      html:`<div style="display:flex;flex-direction:column;align-items:center"><div style="width:26px;height:26px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;border:2px solid rgba(255,255,255,0.7);box-shadow:0 3px 8px rgba(0,0,0,0.35)">${i+1}</div><div style="margin-top:3px;font-size:10px;font-weight:700;color:#1e293b;white-space:nowrap;text-shadow:0 1px 2px rgba(255,255,255,0.8);font-family:DM Sans,sans-serif;pointer-events:none">${city.name}</div></div>`,
+      className:'', iconSize:[0,0], iconAnchor:[13,13]
+    });
+    emOverlay.push(L.marker([city.lat,city.lng], {icon, zIndexOffset:1000}).addTo(emMap));
+  });
+  if (cities.length > 0) {
+    try { emMap.fitBounds(L.latLngBounds(cities.map(c=>[c.lat,c.lng])).pad(0.25)); } catch(e){}
+  }
+}
+
+function renderEmOverview() {
+  clearEmLayers();
+  const { projects } = getEmProjects();
+  const allLL = [];
+  projects.forEach(proj => {
+    const cities = (proj.cities||[]).filter(c=>!c._deleted).sort((a,b)=>a.order-b.order);
+    const conns  = proj.connections||[];
+    const baseColor = EM_COLORS[cities[0]?.country]||EM_COLORS.DEFAULT;
+    for (let i=0; i<cities.length-1; i++) {
+      const a=cities[i], b=cities[i+1];
+      const conn = conns.find(c=>c.fromIdx===i&&c.toIdx===i+1)||{type:'flight'};
+      const dash = EM_CONN_DASH[conn.type];
+      const opts = {color:baseColor, weight:2, opacity:0.7};
+      if (dash) opts.dashArray = dash.join(',');
+      emOverlay.push(L.polyline([[a.lat,a.lng],[b.lat,b.lng]], opts).addTo(emMap));
+    }
+    cities.forEach((city, i) => {
+      const color = EM_COLORS[city.country]||EM_COLORS.DEFAULT;
+      const icon = L.divIcon({
+        html:`<div style="width:20px;height:20px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:white;border:2px solid rgba(255,255,255,0.7);box-shadow:0 2px 6px rgba(0,0,0,0.3)">${i+1}</div>`,
+        className:'', iconSize:[0,0], iconAnchor:[10,10]
+      });
+      emOverlay.push(L.marker([city.lat,city.lng], {icon, zIndexOffset:1000}).addTo(emMap));
+      allLL.push([city.lat, city.lng]);
+    });
+  });
+  if (allLL.length) try { emMap.fitBounds(L.latLngBounds(allLL).pad(0.15)); } catch(e){}
+}
+
+function initEmbedMap() {
+  emMap = L.map('embed-map', { zoomControl:false, attributionControl:false }).setView([65.5,15],5);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom:19
+  }).addTo(emMap);
+  const { activeId } = getEmProjects();
+  emActiveProjId = activeId || 'proj_norway';
+  renderEmTabs();
+  renderEmProj(emActiveProjId);
+}
+
+document.addEventListener('DOMContentLoaded', () => { initItinBoard(); initEmbedMap(); });
+
+/* ══════════════════════════════════════
+   MAP VIEW JS
+══════════════════════════════════════ */
+const MV_COLORS = { NO:'#0ea5e9', SE:'#6366f1', FI:'#10b981', IS:'#8b5cf6', DEFAULT:'#64748b' };
+const MV_PRESET = [
+  { id:'oslo',    name:'奧斯陸', nameEn:'Oslo',    country:'NO', lat:59.9139, lng:10.7522, days:3, order:1,
+    highlights:['維格蘭雕塑公園','孟克美術館 MUNCH','維京船博物館','阿克斯胡斯城堡'],
+    food:['Fiskeriet（海鮮）','Mathallen 食品市場'],
+    experience:['浮式桑拿 Tjuvholmen'] },
+  { id:'lofoten', name:'羅浮敦', nameEn:'Lofoten', country:'NO', lat:68.135, lng:13.595, days:3, order:2,
+    highlights:['Reine 峽灣村落','Henningsvær 漁村','Trollfjord 遊船','Å 村'],
+    food:["Anita's Sjømat（鱈魚）",'Børsen Spiseri'],
+    experience:['🌌 極光觀賞','🚢 Hurtigruten 北上夜船'] },
+  { id:'tromso',  name:'特羅姆瑟', nameEn:'Tromsø', country:'NO', lat:69.6492, lng:18.9553, days:4, order:3,
+    highlights:['北極大教堂','Storsteinen 纜車 421m','Polaria 北極博物館'],
+    food:['Arctandria（海鮮）','Mathallen Tromsø'],
+    experience:['🌌 極光追逐行程','🦌 馴鹿體驗','🏔 Lyngen 冰川健行','🫎 麋鹿觀察'] },
+];
+const MV_CONNS = [
+  { from:'oslo',    to:'lofoten', type:'flight', label:'Oslo→Lofoten 國內線 ~1.5h' },
+  { from:'lofoten', to:'tromso',  type:'ship',   label:'Hurtigruten 北上夜船 ~16h' },
+];
+
+let mvMap = null, mvInited = false, mvAddMode = false, mvShowRoute = true;
+let mvCities = [], mvMarkers = {}, mvRouteLayers = [], mvSidebarOpen = true, mvPendingLL = null;
+const mvHcard = () => document.getElementById('mv-hcard');
+
+function mvLoadCities() {
+  try { const s = localStorage.getItem('aurora_mv_cities'); if (s) return JSON.parse(s); } catch(e) {}
+  return null;
+}
+function mvSaveCities() {
+  try { localStorage.setItem('aurora_mv_cities', JSON.stringify(mvCities)); } catch(e) {}
+}
+
+function mvInitOnce() {
+  if (mvInited) return;
+  mvInited = true;
+  const saved = mvLoadCities();
+  mvCities = saved && saved.length ? saved : MV_PRESET.map(c => ({...c}));
+
+  mvMap = L.map('mv-map', { zoomControl: false }).setView([65.5, 15], 5);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    maxZoom: 19
+  }).addTo(mvMap);
+  L.control.zoom({ position: 'bottomleft' }).addTo(mvMap);
+
+  mvMap.on('click', function(e) {
+    if (!mvAddMode) return;
+    mvPendingLL = e.latlng;
+    const form = document.getElementById('mv-aform');
+    const px = e.containerPoint.x, vw = window.innerWidth;
+    form.style.left = (px > vw / 2 ? Math.max(10, px - 300) : Math.min(px + 20, vw - 295)) + 'px';
+    form.style.top  = '65px';
+    form.classList.add('mv-vis');
+    document.getElementById('mv-acoords').textContent = `📍 ${e.latlng.lat.toFixed(4)}°N, ${e.latlng.lng.toFixed(4)}°E`;
+    document.getElementById('mv-fname').focus();
+  });
+
+  mvRenderAll();
+}
+
+function mvRenderAll() {
+  Object.values(mvMarkers).forEach(m => mvMap.removeLayer(m));
+  Object.keys(mvMarkers).forEach(k => delete mvMarkers[k]);
+  const active = mvCities.filter(c => !c._deleted).sort((a,b) => a.order - b.order);
+  active.forEach((city, i) => { mvMarkers[city.id] = mvCreateMarker(city, i + 1); });
+  mvRenderRoutes();
+  mvRenderSidebar();
+  mvUpdateSummary();
+}
+
+function mvCreateMarker(city, num) {
+  const color = MV_COLORS[city.country] || MV_COLORS.DEFAULT;
+  const icon = L.divIcon({
+    html: `<div class="mv-city-marker"><div class="mv-pin" style="background:${color}" data-mvid="${city.id}">${num}</div><div class="mv-mlabel">${city.name}</div></div>`,
+    className: '', iconSize: [0,0], iconAnchor: [15,15]
+  });
+  const m = L.marker([city.lat, city.lng], { icon, zIndexOffset: 1000 }).addTo(mvMap);
+  m.on('mouseover', e => mvShowHcard(city, e.originalEvent));
+  m.on('mousemove', e => mvMoveHcard(e.originalEvent));
+  m.on('mouseout',  () => mvHideHcard());
+  m.on('click',     () => mvMap.flyTo([city.lat, city.lng], 8, { duration: 1 }));
+  return m;
+}
+
+function mvRenderRoutes() {
+  mvRouteLayers.forEach(l => mvMap.removeLayer(l));
+  mvRouteLayers = [];
+  if (!mvShowRoute) return;
+  const active = mvCities.filter(c => !c._deleted).sort((a,b) => a.order - b.order);
+  for (let i = 0; i < active.length - 1; i++) {
+    const a = active[i], b = active[i+1];
+    const conn = MV_CONNS.find(c => (c.from===a.id&&c.to===b.id)||(c.from===b.id&&c.to===a.id));
+    const opts = (conn && conn.type === 'ship')
+      ? { color:'#34d399', weight:2.5, dashArray:'3,7',  opacity:0.8 }
+      : { color:'#0ea5e9', weight:2,   dashArray:'10,6', opacity:0.7 };
+    mvRouteLayers.push(L.polyline([[a.lat,a.lng],[b.lat,b.lng]], opts).addTo(mvMap));
+  }
+}
+
+function mvRenderSidebar() {
+  const list = document.getElementById('mv-list');
+  const active = mvCities.filter(c => !c._deleted).sort((a,b) => a.order - b.order);
+  list.innerHTML = '';
+  active.forEach((city, i) => {
+    const color = MV_COLORS[city.country] || MV_COLORS.DEFAULT;
+    if (i > 0) {
+      const prev = active[i-1];
+      const conn = MV_CONNS.find(c => (c.from===prev.id&&c.to===city.id)||(c.from===city.id&&c.to===prev.id));
+      const row = document.createElement('div');
+      row.className = 'mv-conn-row';
+      row.innerHTML = `<div class="mv-conn-line ${conn ? conn.type : 'flight'}"></div><span class="mv-conn-label">${conn ? conn.label : '✈ 飛行'}</span>`;
+      list.appendChild(row);
+    }
+    const row = document.createElement('div');
+    row.className = 'mv-city-row';
+    row.onclick = () => mvMap.flyTo([city.lat, city.lng], 8, { duration: 1 });
+    row.innerHTML = `
+      <div class="mv-city-num" style="background:${color}22;color:${color}">${i+1}</div>
+      <div class="mv-city-info"><div class="mv-city-name">${city.name}</div><div class="mv-city-sub">${city.nameEn} · ${city.days}晚</div></div>
+      <button class="mv-city-rm" onclick="mvRemoveCity(event,'${city.id}')" title="移除">✕</button>`;
+    list.appendChild(row);
+  });
+}
+
+function mvUpdateSummary() {
+  const active = mvCities.filter(c => !c._deleted);
+  document.getElementById('mv-summary').textContent = `${active.length} 個城市 · ${active.reduce((s,c)=>s+(c.days||0),0)} 晚`;
+}
+
+/* Hover card */
+function mvShowHcard(city, e) {
+  document.getElementById('mv-hc-days').textContent = `${city.days} 晚`;
+  document.getElementById('mv-hc-name').textContent = city.name;
+  document.getElementById('mv-hc-sub').textContent  = `${city.nameEn} · ${city.country}`;
+  function fill(wid, lid, arr) {
+    const w = document.getElementById(wid), l = document.getElementById(lid);
+    if (!arr || !arr.length) { w.style.display='none'; return; }
+    w.style.display='block';
+    l.innerHTML = arr.map(t => `<div class="mv-hc-item"><span>${t}</span></div>`).join('');
+  }
+  fill('mv-hc-hl-wrap','mv-hc-hl', city.highlights);
+  fill('mv-hc-fd-wrap','mv-hc-fd', city.food);
+  fill('mv-hc-ex-wrap','mv-hc-ex', city.experience);
+  mvMoveHcard(e);
+  mvHcard().classList.add('mv-hv');
+}
+function mvMoveHcard(e) {
+  const vw = window.innerWidth, vh = window.innerHeight, cw = 230, ch = 200;
+  let x = e.clientX + 15, y = e.clientY - 18;
+  if (x + cw > vw - 8) x = e.clientX - cw - 15;
+  if (y + ch > vh - 8) y = vh - ch - 8;
+  if (y < 60) y = 60;
+  mvHcard().style.cssText += `left:${x}px;top:${y}px`;
+}
+function mvHideHcard() { mvHcard().classList.remove('mv-hv'); }
+
+/* Add mode */
+function mvToggleAdd() {
+  mvAddMode = !mvAddMode;
+  const btn = document.getElementById('mv-btn-add');
+  const hint = document.getElementById('mv-hint');
+  if (mvAddMode) {
+    btn.textContent = '✕ 取消新增'; btn.classList.add('mv-adding');
+    hint.classList.add('mv-vis'); document.body.classList.add('mv-adding-mode');
+  } else {
+    btn.textContent = '＋ 新增城市'; btn.classList.remove('mv-adding');
+    hint.classList.remove('mv-vis'); document.body.classList.remove('mv-adding-mode');
+    mvCancelAdd();
+  }
+}
+function mvCancelAdd() {
+  document.getElementById('mv-aform').classList.remove('mv-vis');
+  mvPendingLL = null;
+  ['mv-fname','mv-fnamen','mv-fdays','mv-fhl','mv-ffd'].forEach(id => { document.getElementById(id).value=''; });
+}
+function mvSaveCity() {
+  const name = document.getElementById('mv-fname').value.trim();
+  if (!name || !mvPendingLL) return;
+  const nameEn = document.getElementById('mv-fnamen').value.trim() || name;
+  const days   = parseInt(document.getElementById('mv-fdays').value) || 2;
+  const hl     = document.getElementById('mv-fhl').value.trim().split('\n').filter(Boolean);
+  const fd     = document.getElementById('mv-ffd').value.trim().split('\n').filter(Boolean);
+  const m = nameEn.toUpperCase();
+  let country = 'NO';
+  if (m.includes('SWEDEN')||m.includes(' SE')) country='SE';
+  else if (m.includes('FINLAND')||m.includes(' FI')) country='FI';
+  else if (m.includes('ICELAND')||m.includes(' IS')) country='IS';
+  const maxOrder = mvCities.filter(c=>!c._deleted).reduce((x,c)=>Math.max(x,c.order),0);
+  mvCities.push({ id:'c'+Date.now(), name, nameEn, country,
+    lat:mvPendingLL.lat, lng:mvPendingLL.lng, days, order:maxOrder+1,
+    highlights:hl, food:fd, experience:[] });
+  mvSaveCities(); mvRenderAll(); mvCancelAdd();
+  if (mvAddMode) mvToggleAdd();
+}
+function mvRemoveCity(e, id) {
+  e.stopPropagation();
+  const city = mvCities.find(c=>c.id===id);
+  if (!city || !confirm(`移除「${city.name}」？`)) return;
+  city._deleted = true;
+  mvCities.filter(c=>!c._deleted).sort((a,b)=>a.order-b.order).forEach((c,i)=>c.order=i+1);
+  mvSaveCities(); mvRenderAll();
+}
+function mvToggleRoute() {
+  mvShowRoute = !mvShowRoute;
+  document.getElementById('mv-btn-route').classList.toggle('mv-active', mvShowRoute);
+  mvRenderRoutes();
+}
+function mvToggleSidebar() {
+  mvSidebarOpen = !mvSidebarOpen;
+  const tog = document.getElementById('mv-toggle');
+  document.body.classList.toggle('map-sidebar-closed', !mvSidebarOpen);
+  tog.textContent = mvSidebarOpen ? '‹' : '›';
+  setTimeout(() => { if (mvMap) mvMap.invalidateSize(); }, 280);
+}
+</script>
+</body>
+</html>
