@@ -148,6 +148,32 @@ a { color: inherit; text-decoration: none; }
 }
 .no-nav-btn:hover { border-color: var(--no); color: var(--no); background: var(--no-bg); }
 
+/* ── Sticky nav ── */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(242,245,249,0.96); backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex; gap: 4px; align-items: center;
+  padding: 7px max(16px, env(safe-area-inset-left,0px));
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+.sticky-nav::-webkit-scrollbar { display: none; }
+.snav-btn {
+  flex-shrink: 0; padding: 5px 13px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  background: none; border: 1.5px solid transparent;
+  cursor: pointer; transition: .15s; font-family: inherit;
+  white-space: nowrap;
+}
+.snav-btn:hover { color: var(--no); border-color: var(--no-border); background: var(--no-bg); }
+.snav-btn.snav-active { color: var(--no); border-color: var(--no); background: var(--no-bg); }
+.snav-map-btn { margin-left: auto; color: var(--au-teal); }
+.snav-map-btn:hover { color: var(--au-teal); border-color: var(--au-teal); background: rgba(20,184,166,.08); }
+
+/* ── Section anchors ── */
+section[id^="sec-"] { scroll-margin-top: 42px; }
+
 /* ── Memo section ── */
 .memo-section {
   margin: 16px 0 0;
@@ -956,8 +982,14 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 <body>
 
 <!-- ══════════════════════════════════════ HOME ══════════════════════════════════════ -->
-<div id="home" class="view active">
-
+<nav class="sticky-nav" id="sticky-nav">
+  <button class="snav-btn" onclick="scrollToSection('sec-overview')">概覽</button>
+  <button class="snav-btn" onclick="scrollToSection('sec-flights')">航班</button>
+  <button class="snav-btn" onclick="scrollToSection('sec-activities')">活動</button>
+  <button class="snav-btn" onclick="scrollToSection('sec-itinerary')">行程</button>
+  <button class="snav-btn" onclick="scrollToSection('sec-memo')">備忘</button>
+  <button class="snav-btn snav-map-btn" onclick="openMap()">🗺 地圖</button>
+</nav>
   <div class="hero">
     <div class="hero-inner">
       <div class="hero-eyebrow">Travel Proposal · 2027</div>
@@ -975,6 +1007,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
   </div>
 
   <!-- Embedded route map -->
+<section id="sec-overview"></section>
   <div class="embed-map-wrap">
     <div id="embed-map"></div>
   </div>
@@ -1025,13 +1058,6 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
     </div>
 
     <!-- 導覽按鈕 -->
-    <div class="no-nav-row">
-      <button class="no-nav-btn" onclick="nav('norway')">✈ 航班 &amp; 費用</button>
-      <button class="no-nav-btn" onclick="nav('norway')">🏃 活動清單</button>
-      <button class="no-nav-btn" onclick="nav('norway')">📅 行程規劃</button>
-      <button class="no-nav-btn" onclick="nav('norway')">📝 備忘錄</button>
-    </div>
-
     <!-- 路線地圖入口 -->
     <div class="map-cta" onclick="nav('map')">
       <div class="map-cta-icon">🗺</div>
@@ -1041,19 +1067,6 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       </div>
       <div class="map-cta-arrow">→</div>
     </div>
-
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════ NORWAY ══════════════════════════════════════ -->
-<div id="view-norway" class="view">
-  <div class="page-header">
-    <button class="btn-back" onclick="nav('home')">←</button>
-    <span class="page-flag">🇳🇴</span>
-    <span class="page-title">挪威 Norway</span>
-    <span class="page-sub">2027 · 極光行規劃</span>
-  </div>
-  <div class="detail-body">
 
     <div class="country-hero ch-no">
       <div class="ch-stat"><div class="ch-stat-val">15</div><div class="ch-stat-label">建議天數（上限）</div></div>
@@ -1116,6 +1129,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       </div>
     </div>
 
+<section id="sec-flights"></section>
     <!-- 機票資訊 -->
     <div class="ana-block" style="margin-bottom:14px">
       <div class="ana-head">✈ 機票資訊（Emirates · 確認班次）</div>
@@ -1270,6 +1284,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       </div>
     </div>
 
+<section id="sec-activities"></section>
     <!-- 活動：分區詳細 -->
     <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">🎯 分區活動與費用估算</div>
 
@@ -1598,6 +1613,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       </div>
     </div>
 
+<section id="sec-itinerary"></section>
     <!-- 行程方塊圖 -->
     <div class="ana-block" style="margin-bottom:14px">
       <div class="ana-head">📅 行程規劃（可拖曳調整順序）</div>
@@ -1706,6 +1722,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
     </div>
 
     <!-- 備忘錄 -->
+<section id="sec-memo"></section>
     <div class="memo-section" id="memo-wrap">
       <div class="memo-header">
         <span style="font-size:16px">📝</span>
@@ -1717,13 +1734,11 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
     </div>
 
   </div>
-</div>
-
 <!-- ══════════════════════════════════════ MAP VIEW ══════════════════════════════════════ -->
 <div id="view-map" class="view">
   <!-- Topbar -->
   <div id="mv-topbar">
-    <button class="mv-btn mv-btn-back" onclick="nav('home')">← 返回總覽</button>
+    <button class="mv-btn mv-btn-back" onclick="closeMap()">← 返回總覽</button>
     <div class="mv-logo">路線地圖<span>.</span></div>
     <span style="font-size:10px;color:#334155">2027 · 極光行</span>
     <div class="mv-sep"></div>
@@ -1782,12 +1797,21 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 <script>
 /* ── Navigation ── */
 function nav(id) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  const target = id === 'home' ? document.getElementById('home') : document.getElementById('view-' + id);
-  if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+  if (id === 'map') { openMap(); }
   hideTooltip();
-  if (id === 'map') { mvInitOnce(); document.body.style.overflow = 'hidden'; }
-  else { document.body.style.overflow = ''; }
+}
+function openMap() {
+  document.getElementById('view-map').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  mvInitOnce();
+}
+function closeMap() {
+  document.getElementById('view-map').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /* ── Map tooltip data ── */
