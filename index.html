@@ -111,6 +111,66 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
 }
 
+/* ── Norway quick summary (home) ── */
+.no-quick-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 10px;
+}
+.nqg-item {
+  background: var(--surface); border: 1px solid var(--no-border);
+  border-radius: 10px; padding: 10px 8px; text-align: center;
+}
+.nqg-label { font-size: 10px; color: var(--muted); margin-bottom: 2px; letter-spacing: 0.5px; }
+.nqg-val { font-size: 15px; font-weight: 700; color: var(--no); }
+.no-route-strip {
+  background: linear-gradient(135deg,rgba(2,132,199,.07),rgba(2,132,199,.03));
+  border: 1px solid var(--no-border); border-radius: 10px;
+  padding: 10px 14px; font-size: 11px; font-weight: 600; color: var(--sub);
+  margin-bottom: 10px; line-height: 2;
+}
+.nrs-nights { color: var(--no); font-size: 10px; }
+.nrs-arrow { color: var(--muted2); margin: 0 4px; }
+.no-region-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 10px; }
+.nor-card {
+  background: var(--surface); border: 1.5px solid var(--no-border);
+  border-radius: 12px; padding: 12px 10px; text-align: center; cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+}
+.nor-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(2,132,199,.12); }
+.nor-emoji { font-size: 22px; margin-bottom: 4px; }
+.nor-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.nor-sub { font-size: 10px; color: var(--muted); }
+.no-nav-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 10px; }
+.no-nav-btn {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 9px 4px; font-size: 10px; font-weight: 700;
+  color: var(--sub); cursor: pointer; text-align: center; transition: .15s;
+  font-family: inherit;
+}
+.no-nav-btn:hover { border-color: var(--no); color: var(--no); background: var(--no-bg); }
+
+/* ── Memo section ── */
+.memo-section {
+  margin: 16px 0 0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px 16px;
+}
+.memo-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.memo-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.memo-saved { font-size: 10px; color: var(--muted); margin-left: auto; }
+.memo-textarea {
+  width: 100%; min-height: 140px; resize: vertical;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px;
+  font-size: 13px; color: var(--text); font-family: inherit; line-height: 1.7;
+  outline: none; transition: border-color .15s;
+}
+.memo-textarea:focus { border-color: var(--no); }
+.memo-textarea::placeholder { color: var(--muted2); }
+
 /* ── Comparison bar ── */
 .compare-grid {
   display: grid;
@@ -903,13 +963,13 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       <div class="hero-eyebrow">Travel Proposal · 2027</div>
       <div class="hero-title">極 光 行<span>.</span></div>
       <div class="hero-sub">
-        北歐四國選址提案 ——  挪威 · 瑞典 · 芬蘭 · 冰島<br>
-        目標：看見北極光。主要候選：挪威（15天可行性評估中）
+        挪威極光行 ——  Oslo · Lofoten · Tromsø<br>
+        2027 年 10 月 9 日 — 23 日 · 14 天 · 2 人
       </div>
       <div class="hero-tags">
-        <span class="htag htag-blue">最佳時機 10月–3月</span>
-        <span class="htag htag-green">KP ≥ 2 可見</span>
-        <span class="htag htag-v">預計 2027 / 10 月</span>
+        <span class="htag htag-blue">10/9–23 · 14 天</span>
+        <span class="htag htag-green">EK387 · 阿聯酋航空</span>
+        <span class="htag htag-v">極光季 10 月</span>
       </div>
     </div>
   </div>
@@ -924,123 +984,52 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
   </div>
 
   <div class="section-wrap">
-    <div class="section-label" style="margin-top:4px">四國比較 — 點選查看分析</div>
+    <!-- 行程摘要 -->
+    <div class="no-quick-grid">
+      <div class="nqg-item"><div class="nqg-label">出發</div><div class="nqg-val">10/09</div></div>
+      <div class="nqg-item"><div class="nqg-label">回程</div><div class="nqg-val">10/23</div></div>
+      <div class="nqg-item"><div class="nqg-label">天數</div><div class="nqg-val">14 天</div></div>
+      <div class="nqg-item"><div class="nqg-label">人數</div><div class="nqg-val">2 人</div></div>
+    </div>
 
-    <div class="compare-grid">
-      <!-- Norway -->
-      <div class="cmp-card cmp-card-no focused" onclick="nav('norway')">
-        <div class="cmp-header">
-          <div class="cmp-flag">🇳🇴</div>
-          <div class="cmp-name">挪威<span class="cmp-name-en"> Norway</span></div>
-          <div><span class="focused-badge">主要候選</span></div>
-        </div>
-        <div class="cmp-body">
-          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">12–15 天</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
-            <div class="aurora-dots">
-              <div class="dot on-no"></div><div class="dot on-no"></div><div class="dot on-no"></div><div class="dot on-no"></div><div class="dot on-no"></div>
-            </div>
-          </div>
-          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★★</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">10月–3月</span></div>
-        </div>
+    <!-- 路線帶 -->
+    <div class="no-route-strip">
+      🏙 Oslo <span class="nrs-nights">3晚</span>
+      <span class="nrs-arrow">→</span>
+      ✈ 國內班機
+      <span class="nrs-arrow">→</span>
+      🏔 Lofoten <span class="nrs-nights">4晚</span>
+      <span class="nrs-arrow">→</span>
+      ⛴ Hurtigruten <span class="nrs-nights">1晚</span>
+      <span class="nrs-arrow">→</span>
+      🌌 Tromsø <span class="nrs-nights">5晚</span>
+    </div>
+
+    <!-- 分區快速卡 -->
+    <div class="no-region-row">
+      <div class="nor-card" onclick="nav('norway')">
+        <div class="nor-emoji">🏙</div>
+        <div class="nor-name">奧斯陸</div>
+        <div class="nor-sub">Day 1–3 · 城市 & 文化</div>
       </div>
-
-      <!-- Sweden -->
-      <div class="cmp-card cmp-card-se" onclick="nav('sweden')">
-        <div class="cmp-header">
-          <div class="cmp-flag">🇸🇪</div>
-          <div class="cmp-name">瑞典<span class="cmp-name-en"> Sweden</span></div>
-        </div>
-        <div class="cmp-body">
-          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">7–10 天</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
-            <div class="aurora-dots">
-              <div class="dot on-se"></div><div class="dot on-se"></div><div class="dot on-se"></div><div class="dot on-se"></div><div class="dot"></div>
-            </div>
-          </div>
-          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">11月–3月</span></div>
-        </div>
+      <div class="nor-card" onclick="nav('norway')">
+        <div class="nor-emoji">🏔</div>
+        <div class="nor-name">羅浮敦</div>
+        <div class="nor-sub">Day 4–7 · 峽灣漁村</div>
       </div>
-
-      <!-- Finland -->
-      <div class="cmp-card cmp-card-fi" onclick="nav('finland')">
-        <div class="cmp-header">
-          <div class="cmp-flag">🇫🇮</div>
-          <div class="cmp-name">芬蘭<span class="cmp-name-en"> Finland</span></div>
-        </div>
-        <div class="cmp-body">
-          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">7–10 天</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
-            <div class="aurora-dots">
-              <div class="dot on-fi"></div><div class="dot on-fi"></div><div class="dot on-fi"></div><div class="dot on-fi"></div><div class="dot"></div>
-            </div>
-          </div>
-          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">11月–3月</span></div>
-        </div>
-      </div>
-
-      <!-- Iceland -->
-      <div class="cmp-card cmp-card-is" onclick="nav('iceland')">
-        <div class="cmp-header">
-          <div class="cmp-flag">🇮🇸</div>
-          <div class="cmp-name">冰島<span class="cmp-name-en"> Iceland</span></div>
-        </div>
-        <div class="cmp-body">
-          <div class="cmp-row"><span class="cmp-row-label">建議天數</span><span class="cmp-row-val">7–10 天</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">極光機率</span>
-            <div class="aurora-dots">
-              <div class="dot on-is"></div><div class="dot on-is"></div><div class="dot on-is"></div><div class="dot on-is"></div><div class="dot"></div>
-            </div>
-          </div>
-          <div class="cmp-row"><span class="cmp-row-label">物價</span><span class="cmp-row-val">★★★★★</span></div>
-          <div class="cmp-row"><span class="cmp-row-label">最佳月</span><span class="cmp-row-val">9月–3月</span></div>
-        </div>
+      <div class="nor-card" onclick="nav('norway')">
+        <div class="nor-emoji">🌌</div>
+        <div class="nor-name">特羅姆瑟</div>
+        <div class="nor-sub">Day 8–13 · 極光核心</div>
       </div>
     </div>
 
-    <!-- 各面向比較 -->
-    <div class="axis-card">
-      <div class="axis-title">各面向比較</div>
-      <div class="axis-row">
-        <div class="axis-q">極光機率</div>
-        <div style="flex:1">
-          <div style="display:flex;gap:4px;margin-bottom:3px;align-items:center">
-            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-no" style="width:100%"></div></div>
-            <div class="axis-label" style="color:var(--no)">挪威</div>
-          </div>
-          <div style="display:flex;gap:4px;margin-bottom:3px;align-items:center">
-            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-se" style="width:80%"></div></div>
-            <div class="axis-label" style="color:var(--se)">瑞典</div>
-          </div>
-          <div style="display:flex;gap:4px;margin-bottom:3px;align-items:center">
-            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-fi" style="width:78%"></div></div>
-            <div class="axis-label" style="color:var(--fi)">芬蘭</div>
-          </div>
-          <div style="display:flex;gap:4px;align-items:center">
-            <div class="axis-bar" style="flex:1"><div class="axis-fill fill-is" style="width:72%"></div></div>
-            <div class="axis-label" style="color:var(--is)">冰島</div>
-          </div>
-        </div>
-      </div>
-      <div style="height:1px;background:var(--border);margin:10px 0"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px;">
-        <div><span style="color:var(--no);font-weight:700">挪威</span> — 地景豐富，活動種類最多</div>
-        <div><span style="color:var(--se);font-weight:700">瑞典</span> — Abisko 微氣候，雲層最少</div>
-        <div><span style="color:var(--fi);font-weight:700">芬蘭</span> — 玻璃屋最夢幻，雪橇犬最齊全</div>
-        <div><span style="color:var(--is);font-weight:700">冰島</span> — 地質景觀唯一，但天氣多變</div>
-      </div>
-    </div>
-
-    <!-- 待解決的核心問題 -->
-    <div class="kq-card">
-      <div class="kq-title">⚡ 待決策的核心問題</div>
-      <div class="kq-item"><span class="kq-dot">›</span><span>挪威 15 天夠不夠？Oslo + Lofoten + Tromsø 三段路線是否合理？</span></div>
-      <div class="kq-item"><span class="kq-dot">›</span><span>單一國家深度 vs 兩國輕度？（挪威 + 芬蘭 or 挪威 + 瑞典）</span></div>
-      <div class="kq-item"><span class="kq-dot">›</span><span>10 月是否最佳時間？還是改 12 月–1 月提升機率？</span></div>
-      <div class="kq-item"><span class="kq-dot">›</span><span>Lofoten → Tromsø 用郵輪（夜船體驗）還是轉機（省時）？</span></div>
+    <!-- 導覽按鈕 -->
+    <div class="no-nav-row">
+      <button class="no-nav-btn" onclick="nav('norway')">✈ 航班 &amp; 費用</button>
+      <button class="no-nav-btn" onclick="nav('norway')">🏃 活動清單</button>
+      <button class="no-nav-btn" onclick="nav('norway')">📅 行程規劃</button>
+      <button class="no-nav-btn" onclick="nav('norway')">📝 備忘錄</button>
     </div>
 
     <!-- 路線地圖入口 -->
@@ -1062,7 +1051,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
     <button class="btn-back" onclick="nav('home')">←</button>
     <span class="page-flag">🇳🇴</span>
     <span class="page-title">挪威 Norway</span>
-    <span class="page-sub">主要候選 · 詳細分析</span>
+    <span class="page-sub">2027 · 極光行規劃</span>
   </div>
   <div class="detail-body">
 
@@ -1716,385 +1705,17 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       </div>
     </div>
 
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════ SWEDEN ══════════════════════════════════════ -->
-<div id="view-sweden" class="view">
-  <div class="page-header">
-    <button class="btn-back" onclick="nav('home')">←</button>
-    <span class="page-flag">🇸🇪</span>
-    <span class="page-title">瑞典 Sweden</span>
-    <span class="page-sub">分析</span>
-  </div>
-  <div class="detail-body">
-    <div class="country-hero ch-se">
-      <div class="ch-stat"><div class="ch-stat-val">8</div><div class="ch-stat-label">建議天數</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">★×4</div><div class="ch-stat-label">極光強度</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">11–3</div><div class="ch-stat-label">最佳月份</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">2段</div><div class="ch-stat-label">建議分區</div></div>
-    </div>
-
-    <div class="two-col-grid" style="margin-bottom:12px">
-    <div class="ana-block" style="margin-bottom:0">
-      <div class="ana-head">✨ 最大特色</div>
-      <div class="ana-body">
-        <div class="ana-row">
-          <div class="ana-row-icon">🌌</div>
-          <div class="ana-row-main"><div class="ana-row-name">Abisko 天空站（極光最佳觀測點）</div><div class="ana-row-note">特殊微氣候 · 雲層比周邊少 · 歐洲最低光害之一</div></div>
-          <span class="ana-row-tag tag-must">核心</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🏨</div>
-          <div class="ana-row-main"><div class="ana-row-name">ICEHOTEL（Jukkasjärvi）</div><div class="ana-row-note">全球最著名冰旅館 · 冰雕套房 · 需提前半年訂</div></div>
-          <span class="ana-row-tag tag-book">超早訂</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🐕</div>
-          <div class="ana-row-main"><div class="ana-row-name">雪橇犬 Husky</div><div class="ana-row-note">Kiruna 一帶 · 11月開放 · 挪威 10月無法，瑞典 11月起可行</div></div>
-          <span class="ana-row-tag tag-info">11月起</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🏙</div>
-          <div class="ana-row-main"><div class="ana-row-name">斯德哥爾摩 Stockholm</div><div class="ana-row-note">城市觀光 · 老城 Gamla Stan · 可縮短或略過</div></div>
-          <span class="ana-row-tag tag-opt">選配</span>
-        </div>
+    <!-- 備忘錄 -->
+    <div class="memo-section" id="memo-wrap">
+      <div class="memo-header">
+        <span style="font-size:16px">📝</span>
+        <span class="memo-title">備忘錄</span>
+        <span class="memo-saved" id="memo-saved-label"></span>
       </div>
+      <textarea class="memo-textarea" id="memo-textarea"
+        placeholder="旅行待辦、注意事項、想法…&#10;例：訂 Reine Rorbu 要提前 6 個月&#10;帶充足保暖內層、防水外套"></textarea>
     </div>
 
-    <div class="ana-block">
-      <div class="ana-head">🗺 建議路線</div>
-      <div class="ana-body">
-        <div class="route-card">
-          <div class="route-title">北極圈極光路線</div>
-          <div class="route-flow">
-            <div class="rf-node">桃園</div><div class="rf-arr">✈</div>
-            <div class="rf-node">斯德哥爾摩 2晚</div><div class="rf-arr">✈</div>
-            <div class="rf-node">Kiruna 2晚</div><div class="rf-arr">車</div>
-            <div class="rf-node">Abisko 3晚</div><div class="rf-arr">✈</div>
-            <div class="rf-node">桃園</div>
-          </div>
-          <div class="route-note">Abisko 靠近 Kiruna，可搭夜車或飛。ICEHOTEL 在 Kiruna 附近 Jukkasjärvi，可中途入住。</div>
-        </div>
-      </div>
-    </div>
-    </div><!-- /two-col-grid -->
-
-    <!-- 機票資訊：瑞典 -->
-    <div class="ana-block" style="margin-bottom:14px">
-      <div class="ana-head">✈ 機票資訊（台北 → 斯德哥爾摩）</div>
-      <div class="ana-body" style="padding:12px 14px">
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
-          <div style="padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
-            <div style="font-weight:700;margin-bottom:3px">TPE → ARN（斯德哥爾摩 Arlanda）</div>
-            <div style="color:var(--muted);font-size:11px">經北京/上海轉機（Air China / China Eastern）約 15–17h，或伊斯坦堡（Turkish Airlines）約 19h</div>
-            <div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">
-              <span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:1px 8px;border-radius:8px">經濟艙 ~7,800–14,400 TWD/人</span>
-            </div>
-          </div>
-          <div style="padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
-            <div style="font-weight:700;color:#92400e;margin-bottom:3px">ARN → KRN（Kiruna）國內線 &nbsp;<span style="font-weight:400;color:var(--muted)">SAS（每日）或 Norwegian（週五/日）</span></div>
-            <div style="color:var(--muted);font-size:11px">1h 35m · Abisko 天空站距 Kiruna 約 1h 車程</div>
-            <div style="margin-top:4px;font-weight:700;color:#92400e;font-size:11px">約 TWD 2,000–5,600 / 人</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-            <div style="color:var(--muted);margin-bottom:2px">國際線 2人（來回估）</div>
-            <div style="font-weight:900;font-size:16px;color:var(--se)">~40,000–58,000</div>
-            <div style="color:var(--muted2);font-size:10px">TWD</div>
-          </div>
-          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-            <div style="color:var(--muted);margin-bottom:2px">國內線 2人（來回）</div>
-            <div style="font-weight:900;font-size:16px;color:var(--se)">~8,000–22,000</div>
-            <div style="color:var(--muted2);font-size:10px">TWD（含 ARN↔KRN×2）</div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px">
-          ⚠ 無台灣直飛，北京/上海轉機最便宜但入境中國需簽證。推薦 Turkish Airlines（伊斯坦堡轉）或 Lufthansa（慕尼黑轉）免簽。ICEHOTEL 在 Jukkasjärvi（距 KRN 機場 15 分鐘）。
-        </div>
-      </div>
-    </div>
-
-    <div class="two-col-grid" style="margin-bottom:12px">
-    <div class="ana-block" style="margin-bottom:0">
-      <div class="ana-head">⚖️ 優缺點</div>
-      <div class="ana-body">
-        <div class="pros-cons">
-          <div class="pc-block pros">
-            <div class="pc-title">優點</div>
-            <div class="pc-item">Abisko 微氣候看極光勝率高</div>
-            <div class="pc-item">ICEHOTEL 為獨一無二體驗</div>
-            <div class="pc-item">11月後可雪橇犬</div>
-            <div class="pc-item">飛斯德哥爾摩選擇多</div>
-          </div>
-          <div class="pc-block cons">
-            <div class="pc-title">缺點</div>
-            <div class="pc-item">地景豐富度不如挪威</div>
-            <div class="pc-item">ICEHOTEL 需超早訂位</div>
-            <div class="pc-item">10月雪橇犬仍無法</div>
-            <div class="pc-item">活動集中在北部小鎮</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="background:#eef2ff;border:1px solid var(--se-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--se);margin-bottom:8px">🔗 組合可能性</div>
-      <strong style="color:var(--se)">挪威 + 瑞典：</strong>
-      Tromsø → 飛 Kiruna → Abisko，約多 3–4 天，總行程需 18–19 天，15 天內不建議硬塞。<br><br>
-      <strong style="color:var(--se)">最佳單獨旅遊月份：11月–3月</strong>（積雪後 ICEHOTEL + 雪橇犬才完整）。
-    </div>
-    </div><!-- /two-col-grid -->
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════ FINLAND ══════════════════════════════════════ -->
-<div id="view-finland" class="view">
-  <div class="page-header">
-    <button class="btn-back" onclick="nav('home')">←</button>
-    <span class="page-flag">🇫🇮</span>
-    <span class="page-title">芬蘭 Finland</span>
-    <span class="page-sub">分析</span>
-  </div>
-  <div class="detail-body">
-    <div class="country-hero ch-fi">
-      <div class="ch-stat"><div class="ch-stat-val">8</div><div class="ch-stat-label">建議天數</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">★×4</div><div class="ch-stat-label">極光強度</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">11–3</div><div class="ch-stat-label">最佳月份</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">2段</div><div class="ch-stat-label">建議分區</div></div>
-    </div>
-
-    <div class="two-col-grid" style="margin-bottom:12px">
-    <div class="ana-block" style="margin-bottom:0">
-      <div class="ana-head">✨ 最大特色</div>
-      <div class="ana-body">
-        <div class="ana-row">
-          <div class="ana-row-icon">🌌</div>
-          <div class="ana-row-main"><div class="ana-row-name">玻璃屋住宿（極光小屋）</div><div class="ana-row-note">透明屋頂 · 躺在床上看極光 · Kakslauttanen Arctic Resort 最知名</div></div>
-          <span class="ana-row-tag tag-must">最夢幻</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🐕</div>
-          <div class="ana-row-main"><div class="ana-row-name">雪橇犬（Husky Safari）</div><div class="ana-row-note">芬蘭北部 Lapland · 11月起積雪 · 種類最多</div></div>
-          <span class="ana-row-tag tag-info">11月起</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🦌</div>
-          <div class="ana-row-main"><div class="ana-row-name">馴鹿農場（Reindeer Farm）</div><div class="ana-row-note">Lapland 最道地 · 薩米文化</div></div>
-          <span class="ana-row-tag tag-must">必體驗</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🎅</div>
-          <div class="ana-row-main"><div class="ana-row-name">聖誕老人村（Rovaniemi）</div><div class="ana-row-note">Santa Park · 過 12月可體驗聖誕氛圍</div></div>
-          <span class="ana-row-tag tag-opt">選配</span>
-        </div>
-      </div>
-    </div>
-
-    <div style="background:#ecfdf5;border:1px solid var(--fi-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--fi);margin-bottom:8px">📅 最佳出發月份</div>
-      <strong>12月–1月最完整：</strong>玻璃屋 + 雪橇犬 + 馴鹿全部到位，積雪充足，是最完整的「童話極光」行程。<br><br>
-      <strong>10月：</strong>可看極光，但玻璃屋難訂、雪橇犬未開放，體驗打折扣。
-    </div>
-    </div><!-- /two-col-grid -->
-
-    <!-- 機票資訊：芬蘭 -->
-    <div class="ana-block" style="margin-bottom:14px">
-      <div class="ana-head">✈ 機票資訊（台北 → 赫爾辛基）</div>
-      <div class="ana-body" style="padding:12px 14px">
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
-          <div style="padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
-            <div style="font-weight:700;margin-bottom:3px">TPE → HEL（赫爾辛基 Helsinki）</div>
-            <div style="color:var(--muted);font-size:11px">Finnair 直飛（香港/大阪/仁川轉機）約 16–18h · 四國中最便宜、班次最多</div>
-            <div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">
-              <span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:1px 8px;border-radius:8px">經濟艙 ~6,000–17,000 TWD/人</span>
-              <span style="font-size:10px;background:#ecfdf5;border:1px solid var(--fi-border);color:var(--fi);padding:1px 8px;border-radius:8px">北歐四國最便宜選項</span>
-            </div>
-          </div>
-          <div style="padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
-            <div style="font-weight:700;color:#92400e;margin-bottom:3px">HEL → RVN（Rovaniemi）&nbsp;<span style="font-weight:400;color:var(--muted)">Finnair 每日 / Norwegian 週五日</span></div>
-            <div style="color:var(--muted);font-size:11px">1h 23m · 聖誕老人村/馴鹿農場集中地</div>
-            <div style="margin-top:4px;font-weight:700;color:#92400e;font-size:11px">約 TWD 1,400–5,100 / 人</div>
-          </div>
-          <div style="padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
-            <div style="font-weight:700;color:#92400e;margin-bottom:3px">HEL → IVL（Ivalo）&nbsp;<span style="font-weight:400;color:var(--muted)">Finnair · 更北更深</span></div>
-            <div style="color:var(--muted);font-size:11px">1h 52m · Kakslauttanen 玻璃屋在 Ivalo 附近 Saariselkä · 極光勝率更高</div>
-            <div style="margin-top:4px;font-weight:700;color:#92400e;font-size:11px">約 TWD 2,200–8,900 / 人（旺季貴）</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-            <div style="color:var(--muted);margin-bottom:2px">國際線 2人（來回估）</div>
-            <div style="font-weight:900;font-size:16px;color:var(--fi)">~24,000–68,000</div>
-            <div style="color:var(--muted2);font-size:10px">TWD</div>
-          </div>
-          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-            <div style="color:var(--muted);margin-bottom:2px">國內線 2人（來回）</div>
-            <div style="font-weight:900;font-size:16px;color:var(--fi)">~5,600–35,600</div>
-            <div style="color:var(--muted2);font-size:10px">TWD（視 RVN 或 IVL）</div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px">
-          💡 芬蘭是台灣出發四國中機票最便宜的選項。Finnair 從香港/仁川/大阪轉機，無需中國簽證，總飛行約 16–18h。玻璃屋請至少提前 <strong>1年</strong> 預訂（Kakslauttanen 嚴重供不應求）。
-        </div>
-      </div>
-    </div>
-
-    <div class="two-col-grid" style="margin-bottom:12px">
-    <div class="ana-block" style="margin-bottom:0">
-      <div class="ana-head">⚖️ 優缺點</div>
-      <div class="ana-body">
-        <div class="pros-cons">
-          <div class="pc-block pros">
-            <div class="pc-title">優點</div>
-            <div class="pc-item">玻璃屋體驗最夢幻</div>
-            <div class="pc-item">雪橇犬 + 馴鹿最齊全</div>
-            <div class="pc-item">赫爾辛基有直達北部班機</div>
-            <div class="pc-item">整體較緊湊，7–8天夠用</div>
-          </div>
-          <div class="pc-block cons">
-            <div class="pc-title">缺點</div>
-            <div class="pc-item">玻璃屋極難訂到（需1年前）</div>
-            <div class="pc-item">10月積雪仍不足（雪橇犬無法）</div>
-            <div class="pc-item">地景相對單調（森林為主）</div>
-            <div class="pc-item">需 11月後才進入最佳狀態</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="background:#ecfdf5;border:1px solid var(--fi-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--fi);margin-bottom:8px">🔗 組合可能性</div>
-      <strong style="color:var(--fi)">芬蘭 + 瑞典（11月起）：</strong>HEL → Saariselkä（玻璃屋）→ 飛 ARN → Abisko（天空站），兩國極光聖地一次打包，約 14–16 天可行。<br><br>
-      <strong style="color:var(--fi)">芬蘭 + 挪威（10月）：</strong>機票貴，轉機多，不如挪威單獨做完整。
-    </div>
-    </div><!-- /two-col-grid -->
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════ ICELAND ══════════════════════════════════════ -->
-<div id="view-iceland" class="view">
-  <div class="page-header">
-    <button class="btn-back" onclick="nav('home')">←</button>
-    <span class="page-flag">🇮🇸</span>
-    <span class="page-title">冰島 Iceland</span>
-    <span class="page-sub">分析</span>
-  </div>
-  <div class="detail-body">
-    <div class="country-hero ch-is">
-      <div class="ch-stat"><div class="ch-stat-val">8</div><div class="ch-stat-label">建議天數</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">★×4</div><div class="ch-stat-label">極光強度</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">9月–3月</div><div class="ch-stat-label">最佳月份</div></div>
-      <div class="ch-stat"><div class="ch-stat-val">自駕</div><div class="ch-stat-label">推薦交通</div></div>
-    </div>
-
-    <div class="two-col-grid" style="margin-bottom:12px">
-    <div class="ana-block" style="margin-bottom:0">
-      <div class="ana-head">✨ 最大特色</div>
-      <div class="ana-body">
-        <div class="ana-row">
-          <div class="ana-row-icon">🌋</div>
-          <div class="ana-row-main"><div class="ana-row-name">地質奇景（全球唯一）</div><div class="ana-row-note">黃金圈 · 黑沙灘 · 極光 + 火山 · 瀑布 · 間歇泉</div></div>
-          <span class="ana-row-tag tag-must">差異化</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🚗</div>
-          <div class="ana-row-main"><div class="ana-row-name">自駕環島</div><div class="ana-row-note">1號公路繞島 · 彈性極高 · 需要租車 + 雪胎</div></div>
-          <span class="ana-row-tag tag-info">自駕為主</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🏊</div>
-          <div class="ana-row-main"><div class="ana-row-name">藍湖溫泉 Blue Lagoon</div><div class="ana-row-note">標誌性體驗 · 機場附近 · 需提前訂</div></div>
-          <span class="ana-row-tag tag-book">必訂</span>
-        </div>
-        <div class="ana-row">
-          <div class="ana-row-icon">🌌</div>
-          <div class="ana-row-main"><div class="ana-row-name">極光觀賞</div><div class="ana-row-note">天氣多變是最大變數 · 但全島無光害地點多</div></div>
-          <span class="ana-row-tag tag-warn">天氣依賴</span>
-        </div>
-      </div>
-    </div>
-
-    <div style="background:#f5f3ff;border:1px solid var(--is-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--is);margin-bottom:8px">🚗 自駕建議路線</div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D1–2</span><span>Reykjavik → Blue Lagoon → 黃金圈</span></div>
-        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D3–4</span><span>南岸：Seljalandsfoss → Vík → 黑沙灘</span></div>
-        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D5–6</span><span>Jökulsárlón 冰河湖 → Vatnajökull 冰川</span></div>
-        <div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:700;color:var(--is);min-width:50px">D7–8</span><span>北部 Akureyri → Húsavík 賞鯨</span></div>
-      </div>
-    </div>
-    </div><!-- /two-col-grid -->
-
-    <!-- 機票資訊：冰島 -->
-    <div class="ana-block" style="margin-bottom:14px">
-      <div class="ana-head">✈ 機票資訊（台北 → 雷克雅維克）</div>
-      <div class="ana-body" style="padding:12px 14px">
-        <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px">
-          <div style="padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
-            <div style="font-weight:700;margin-bottom:3px">TPE → KEF（雷克雅維克 Keflavik）</div>
-            <div style="color:var(--muted);font-size:11px">無直飛，需經 AMS（阿姆斯特丹）或 LHR（倫敦）轉 Icelandair，約 21–25h · 四國中最貴且班次最少</div>
-            <div style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">
-              <span style="font-size:10px;background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:1px 8px;border-radius:8px">經濟艙 ~13,800–27,600 TWD/人</span>
-              <span style="font-size:10px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;padding:1px 8px;border-radius:8px">四國中機票最貴</span>
-            </div>
-          </div>
-          <div style="padding:8px 12px;background:#ecfdf5;border:1px solid var(--fi-border);border-radius:8px;font-size:12px">
-            <div style="font-weight:700;color:var(--fi);margin-bottom:3px">冰島境內不需國內線 · 全程自駕</div>
-            <div style="color:var(--muted);font-size:11px">KEF 機場即在雷克雅維克附近 · 租車自駕 1 號環島公路 · 需雪胎（10月起）</div>
-            <div style="margin-top:4px;font-size:11px;color:var(--muted)">租車約 TWD 2,500–5,000/天（含雪胎、保險）</div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-          <div style="padding:10px;border:2px solid #e879f9;border-radius:8px;font-size:11px;text-align:center;background:#fdf4ff">
-            <div style="color:#86198f;font-weight:700;margin-bottom:2px">國際線 2人（來回估）</div>
-            <div style="font-weight:900;font-size:16px;color:#a21caf">~55,000–110,000</div>
-            <div style="color:var(--muted2);font-size:10px">TWD（四國最高）</div>
-          </div>
-          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-            <div style="color:var(--muted);margin-bottom:2px">租車（8天估）</div>
-            <div style="font-weight:900;font-size:16px;color:var(--is)">~40,000–80,000</div>
-            <div style="color:var(--muted2);font-size:10px">TWD（2人共攤）</div>
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px">
-          ⚠ 冰島機票最貴、轉機最多（需在 AMS 或 LHR 轉 Icelandair），且冬季自駕有天氣風險。強烈建議提前訂好 Blue Lagoon（機場旁，早/晚各一段適合）和黃金圈行程。
-        </div>
-      </div>
-    </div>
-
-    <div class="two-col-grid" style="margin-bottom:12px">
-    <div class="ana-block" style="margin-bottom:0">
-      <div class="ana-head">⚖️ 優缺點</div>
-      <div class="ana-body">
-        <div class="pros-cons">
-          <div class="pc-block pros">
-            <div class="pc-title">優點</div>
-            <div class="pc-item">地景豐富度遠超其他國</div>
-            <div class="pc-item">自駕自由度高</div>
-            <div class="pc-item">9月即可看極光</div>
-            <div class="pc-item">可獨立成 10天行程</div>
-          </div>
-          <div class="pc-block cons">
-            <div class="pc-title">缺點</div>
-            <div class="pc-item">天氣極度多變，極光機率不穩</div>
-            <div class="pc-item">物價與挪威同等高</div>
-            <div class="pc-item">缺乏「文化體驗」（馴鹿等）</div>
-            <div class="pc-item">冬季自駕有一定風險</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="background:#f5f3ff;border:1px solid var(--is-border);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--sub);align-self:start">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--is);margin-bottom:8px">🎯 定位建議</div>
-      冰島是「<strong>地景旅行附加極光</strong>」，而非「極光旅行附加地景」。<br><br>
-      主目標極光 → 挪威成功率和配套更完整。<br>
-      主目標獨特地貌 → 冰島是最佳選擇，建議作為<strong>第二趟北歐行</strong>。<br><br>
-      <strong style="color:var(--is)">與挪威組合（14天）：</strong>Tromsø 5晚 + 飛 KEF + 冰島 6晚，兩者均 10月適合，是四國組合中最合理的選項。
-    </div>
-    </div><!-- /two-col-grid -->
   </div>
 </div>
 
@@ -2102,7 +1723,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 <div id="view-map" class="view">
   <!-- Topbar -->
   <div id="mv-topbar">
-    <button class="mv-btn mv-btn-back" onclick="nav('home')">📊 提案分析</button>
+    <button class="mv-btn mv-btn-back" onclick="nav('home')">← 返回總覽</button>
     <div class="mv-logo">路線地圖<span>.</span></div>
     <span style="font-size:10px;color:#334155">2027 · 極光行</span>
     <div class="mv-sep"></div>
@@ -2482,6 +2103,7 @@ function renderItinFlow() {
   });
 
   el.innerHTML = html;
+  itinSaveToLS();
 }
 
 function itinSaveName(i, el) {
@@ -2591,7 +2213,38 @@ function itinAddDay(ni) {
   }, 30);
 }
 
+const ITIN_LS_KEY = 'aurora_itin_v1';
+const MEMO_LS_KEY = 'aurora_memo_v1';
+
+function itinSaveToLS() {
+  try { localStorage.setItem(ITIN_LS_KEY, JSON.stringify({ nodes: itinNodes, edges: itinEdges })); } catch(e) {}
+}
+function itinLoadFromLS() {
+  try {
+    const d = JSON.parse(localStorage.getItem(ITIN_LS_KEY) || 'null');
+    if (d?.nodes?.length) { itinNodes = d.nodes; itinEdges = d.edges || itinEdges; }
+  } catch(e) {}
+}
+
+function initMemo() {
+  const ta = document.getElementById('memo-textarea');
+  const lbl = document.getElementById('memo-saved-label');
+  if (!ta) return;
+  try { ta.value = localStorage.getItem(MEMO_LS_KEY) || ''; } catch(e) {}
+  let saveTimer;
+  ta.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    if (lbl) lbl.textContent = '儲存中…';
+    saveTimer = setTimeout(() => {
+      try { localStorage.setItem(MEMO_LS_KEY, ta.value); } catch(e) {}
+      if (lbl) lbl.textContent = '已自動儲存 ✓';
+      setTimeout(() => { if (lbl) lbl.textContent = ''; }, 2000);
+    }, 800);
+  });
+}
+
 function initItinBoard() {
+  itinLoadFromLS();
   itinPush(); // baseline snapshot
   renderItinFlow();
   document.addEventListener('keydown', e => {
@@ -2753,7 +2406,7 @@ function initEmbedMap() {
   renderEmProj(emActiveProjId);
 }
 
-document.addEventListener('DOMContentLoaded', () => { initItinBoard(); initEmbedMap(); });
+document.addEventListener('DOMContentLoaded', () => { initItinBoard(); initEmbedMap(); initMemo(); });
 
 /* ══════════════════════════════════════
    MAP VIEW JS
