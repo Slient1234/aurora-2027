@@ -1783,7 +1783,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 
   </div>
 <!-- Activity combobox shared dropdown -->
-<div id="act-dd"></div>
+<div id="act-dd" onmousedown="event.preventDefault()"></div>
 
 <!-- ══════════════════════════════════════ MAP VIEW ══════════════════════════════════════ -->
 <div id="view-map" class="view">
@@ -2149,7 +2149,11 @@ function renderItinFlow() {
         rightHtml += `<div class="igd-hotel">
           <span class="igh-icon">🛏</span>
           <input class="igh-inp" value="${htl}" placeholder="${htlPh}"
-            onchange="itinNodes[${i}].days[${di}].hotel=this.value">
+            data-ni="${i}" data-di="${di}" data-phase="${node.phase}" data-type="hotel"
+            oninput="actOnInput(this)"
+            onfocus="actOnFocus(this)"
+            onblur="actOnBlur(this)"
+            onkeydown="actOnKeydown(event,this)">
         </div>`;
       }
     });
@@ -2330,12 +2334,36 @@ const ACT_POOL = {
   travel: ['EK387 00:30 出發', 'EK159 DXB→OSL', 'SK4418 OSL→TOS', '等待轉機'],
   home:   ['EK160 14:35 OSL 出發', '抵台 16:15 🎉', 'EVE→OSL 飛奧斯陸', '結束行程'],
 };
+const HOTEL_POOL = {
+  tromso: [
+    'Scandic Ishavshotel', 'Clarion Hotel The Edge',
+    'Thon Hotel Polar', 'Radisson Blu Hotel Tromsø',
+    'Smarthotel Tromsø', 'Tromsø Lodge & Camping',
+    'Comfort Hotel Tromsø', 'Saga Hotel Tromsø',
+  ],
+  senja: [
+    'Hamn i Senja', 'Senja Rorbuer', 'Mefjord Rorbuer',
+    'Senjahopen Havfiskecamping', 'Camp Senja',
+  ],
+  lofoten: [
+    'Eliassen Rorbuer（Hamnøy）', 'Reine Rorbuer',
+    'Å Rorbuer', 'Svinøya Rorbuer（Svolvær）',
+    'Nusfjord Arctic Resort', 'Henningsvær Rorbuer',
+    'Lofoten Cabins（Ramberg）', 'Kabelvåg Hotel',
+  ],
+  oslo: [
+    'The Thief', 'Scandic Vulkan', 'Radisson Blu Plaza Hotel',
+    'Clarion Collection Hotel Bastion', 'Comfort Hotel Grand Central',
+    'Moxy Oslo Fjord', 'Thon Hotel Opera',
+  ],
+  travel: [],
+  home:   [],
+};
 
 let customActs = {};
 try { customActs = JSON.parse(localStorage.getItem('aurora_custom_acts_v1') || '{}'); } catch(e) {}
 
 let _actTarget = null;
-let _ddMousedown = false;
 
 function actOnFocus(inp) {
   _actTarget = inp;
@@ -2343,19 +2371,22 @@ function actOnFocus(inp) {
 }
 function actOnInput(inp) {
   _actTarget = inp;
-  inp.parentNode.dataset.val = inp.value;
+  if (inp.dataset.type !== 'hotel') inp.parentNode.dataset.val = inp.value;
   _actRefreshDD(inp, inp.value);
 }
 function actOnBlur(inp) {
-  if (_ddMousedown) { _ddMousedown = false; return; }
   _actHideDD();
-  const ni = +inp.dataset.ni, di = +inp.dataset.di, ai = +inp.dataset.ai;
+  const ni = +inp.dataset.ni, di = +inp.dataset.di;
   const day = itinNodes[ni]?.days?.[di];
-  if (day) {
+  if (!day) return;
+  if (inp.dataset.type === 'hotel') {
+    day.hotel = inp.value;
+  } else {
+    const ai = +inp.dataset.ai;
     if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
     day.acts[ai] = inp.value;
-    itinSaveToLS();
   }
+  itinSaveToLS();
 }
 function actOnKeydown(e, inp) {
   if (e.key === 'Enter')  { inp.blur(); return; }
@@ -2368,59 +2399,79 @@ function actOnKeydown(e, inp) {
 }
 function _actRefreshDD(inp, q) {
   const phase   = inp.dataset.phase || '';
-  const pool    = [...(ACT_POOL[phase] || []), ...(customActs[phase] || [])];
+  const isHotel = inp.dataset.type === 'hotel';
+  const hkey    = 'hotel_' + phase;
+  const pool    = isHotel
+    ? [...(HOTEL_POOL[phase] || []), ...(customActs[hkey] || [])]
+    : [...(ACT_POOL[phase]   || []), ...(customActs[phase] || [])];
   const lq      = (q || '').trim().toLowerCase();
   const matched = lq ? pool.filter(s => s.toLowerCase().includes(lq)) : pool;
 
   const dd = document.getElementById('act-dd');
   if (!dd) return;
-  let html = matched.map(s =>
-    `<div class="act-dd-item" tabindex="-1"
-      onmousedown="event.preventDefault();_ddMousedown=true"
-      onclick="_actDDSelect(${JSON.stringify(s)})">${s}</div>`
-  ).join('');
-  if (q.trim() && !pool.map(s=>s.toLowerCase()).includes(q.trim().toLowerCase())) {
+
+  /* Use data-val attribute to avoid inline string escaping bugs */
+  let html = matched.map(s => {
+    const esc = s.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    return `<div class="act-dd-item" data-val="${esc}" onclick="_actDDClickItem(this)">${esc}</div>`;
+  }).join('');
+
+  const qTrim = (q || '').trim();
+  if (qTrim && !pool.some(s => s.toLowerCase() === qTrim.toLowerCase())) {
+    const esc = qTrim.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
     if (html) html += '<div class="act-dd-sep"></div>';
-    html += `<div class="act-dd-add"
-      onmousedown="event.preventDefault();_ddMousedown=true"
-      onclick="_actDDAdd(${JSON.stringify(q.trim())})">＋ 新增「${q.trim()}」到選單</div>`;
+    html += `<div class="act-dd-add" data-val="${esc}" onclick="_actDDClickAdd(this)">＋ 新增「${esc}」到選單</div>`;
   }
   if (!html) { _actHideDD(); return; }
   dd.innerHTML = html;
+
   const rect = inp.getBoundingClientRect();
-  const w = Math.max(180, rect.width + 20);
-  dd.style.left   = Math.min(rect.left, window.innerWidth - w - 8) + 'px';
-  dd.style.top    = (rect.bottom + 3) + 'px';
-  dd.style.width  = w + 'px';
+  const w    = Math.max(200, rect.width + 24);
+  const left = Math.min(rect.left, window.innerWidth - w - 8);
+  dd.style.left    = left + 'px';
+  dd.style.top     = (rect.bottom + 4) + 'px';
+  dd.style.width   = w + 'px';
   dd.style.display = 'block';
 }
 function _actHideDD() {
   const dd = document.getElementById('act-dd');
   if (dd) dd.style.display = 'none';
 }
-function _actDDSelect(val) {
-  if (!_actTarget) { _actHideDD(); return; }
+function _actApply(val) {
+  if (!_actTarget) return;
+  const isHotel = _actTarget.dataset.type === 'hotel';
   _actTarget.value = val;
-  _actTarget.parentNode.dataset.val = val;
-  const ni = +_actTarget.dataset.ni, di = +_actTarget.dataset.di, ai = +_actTarget.dataset.ai;
+  if (!isHotel) _actTarget.parentNode.dataset.val = val;
+  const ni = +_actTarget.dataset.ni, di = +_actTarget.dataset.di;
   const day = itinNodes[ni]?.days?.[di];
   if (day) {
-    if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
-    day.acts[ai] = val;
+    if (isHotel) {
+      day.hotel = val;
+    } else {
+      const ai = +_actTarget.dataset.ai;
+      if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
+      day.acts[ai] = val;
+    }
     itinSaveToLS();
   }
   _actHideDD();
-  _ddMousedown = false;
+  _actTarget.focus();
 }
-function _actDDAdd(val) {
+function _actDDClickItem(el) {
+  _actApply(el.dataset.val || el.textContent.trim());
+}
+function _actDDClickAdd(el) {
   if (!_actTarget) return;
-  const phase = _actTarget.dataset.phase || 'other';
-  if (!customActs[phase]) customActs[phase] = [];
-  if (!customActs[phase].includes(val)) {
-    customActs[phase].push(val);
+  const val     = el.dataset.val || el.textContent.replace(/^＋.+「(.+)」.+/, '$1').trim();
+  const phase   = _actTarget.dataset.phase || 'other';
+  const isHotel = _actTarget.dataset.type === 'hotel';
+  const key     = isHotel ? 'hotel_' + phase : phase;
+  if (!customActs[key]) customActs[key] = [];
+  if (!customActs[key].includes(val)) {
+    customActs[key].push(val);
     try { localStorage.setItem('aurora_custom_acts_v1', JSON.stringify(customActs)); } catch(e) {}
   }
-  _actDDSelect(val);
+  _actApply(val);
 }
 
 const ITIN_LS_KEY = 'aurora_itin_v1';
