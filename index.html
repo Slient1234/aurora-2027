@@ -977,6 +977,25 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
   margin-top: 3px; font-size: 10px; font-weight: 700; color: #f1f5f9; white-space: nowrap;
   text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none;
 }
+/* ── Activity combobox dropdown ── */
+#act-dd {
+  position: fixed; z-index: 9999;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; box-shadow: 0 4px 18px rgba(0,0,0,0.13);
+  min-width: 180px; max-width: 280px; max-height: 230px;
+  overflow-y: auto; padding: 4px 0; display: none;
+}
+.act-dd-item {
+  padding: 7px 14px; font-size: 11.5px; cursor: pointer;
+  color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.act-dd-item:hover { background: var(--surface2); color: var(--no); }
+.act-dd-sep { height: 1px; background: var(--border); margin: 2px 0; }
+.act-dd-add {
+  padding: 7px 14px; font-size: 11px; cursor: pointer;
+  color: var(--au-teal); display: flex; align-items: center; gap: 5px;
+}
+.act-dd-add:hover { background: var(--surface2); }
 </style>
 </head>
 <body>
@@ -1763,6 +1782,9 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
     </div>
 
   </div>
+<!-- Activity combobox shared dropdown -->
+<div id="act-dd"></div>
+
 <!-- ══════════════════════════════════════ MAP VIEW ══════════════════════════════════════ -->
 <div id="view-map" class="view">
   <!-- Topbar -->
@@ -2104,9 +2126,11 @@ function renderItinFlow() {
         actsHtml += `<span class="igd-act-node">
           <span class="igd-act-sizer" data-val="${av}">
             <input class="igd-act-inp" value="${av}" placeholder="活動…"
-              oninput="this.parentNode.dataset.val=this.value"
-              onblur="itinSaveAct(${i},${di},${ai},this)"
-              onkeydown="if(event.key==='Enter')this.blur()">
+              data-ni="${i}" data-di="${di}" data-ai="${ai}" data-phase="${node.phase}"
+              oninput="actOnInput(this)"
+              onfocus="actOnFocus(this)"
+              onblur="actOnBlur(this)"
+              onkeydown="actOnKeydown(event,this)">
           </span>
           ${acts.length > 1
             ? `<button class="igd-act-del" onclick="itinDelAct(${i},${di},${ai})">✕</button>`
@@ -2215,6 +2239,7 @@ function itinSaveAct(ni, di, ai, el) {
   if (!day) return;
   if (!Array.isArray(day.acts)) day.acts = [day.acts||''];
   day.acts[ai] = el.value;
+  itinSaveToLS();
 }
 
 function itinDelAct(ni, di, ai) {
@@ -2270,6 +2295,134 @@ function itinAddDay(ni) {
   }, 30);
 }
 
+/* ══════════════════════════════════════
+   ACTIVITY COMBOBOX
+══════════════════════════════════════ */
+const ACT_POOL = {
+  tromso: [
+    '北極大教堂', 'Fjellheisen 纜車', 'Lyngen Alps 冰川健行',
+    '極光追逐小巴（Best Arctic）', '電動雙體船極光遊輪',
+    '帆船熱水浴缸極光', '極光晚餐遊輪',
+    'Arctic Botanical Garden', '馴鹿體驗（薩米人）',
+    '麋鹿觀察', '浮式桑拿', '市區漫步',
+    'Tromsø Museum', 'Polar Museum', '極光攝影',
+    '雪地機車', '犬橇（12月後）',
+  ],
+  senja: [
+    'Tungeneset 海角', 'Bergsbotn 觀景台', 'Segla 山頂健行',
+    'Mefjordvær 漁村', 'Hamn i Senja', '自駕觀景',
+    '極光觀賞', '賞鷹', '峽灣攝影',
+  ],
+  lofoten: [
+    'Reine 峽灣', 'Hamnøy 晨景', 'Nusfjord 漁村',
+    'Reinebringen 健行', 'Henningsvær 漫步', 'Kabelvåg 老教堂',
+    'Å 最西端', 'Ramberg 沙灘', 'Stamsund 漁村',
+    'Svolvær 市區', 'E10 自駕', '極光觀賞',
+    'Trollfjord 遊輪', '海釣體驗',
+    'Svolvær Goat 攀岩', 'Lofoten Museum',
+  ],
+  oslo: [
+    'Vigeland 雕塑公園', '孟克美術館 MUNCH', '浮式桑拿',
+    'Akershus 城堡', '地精博物館', '奧斯陸大教堂',
+    'Aker Brygge 碼頭', 'Mathallen 食品市場',
+    '國家美術館', '維京船博物館', 'Karl Johans gate 購物',
+  ],
+  travel: ['EK387 00:30 出發', 'EK159 DXB→OSL', 'SK4418 OSL→TOS', '等待轉機'],
+  home:   ['EK160 14:35 OSL 出發', '抵台 16:15 🎉', 'EVE→OSL 飛奧斯陸', '結束行程'],
+};
+
+let customActs = {};
+try { customActs = JSON.parse(localStorage.getItem('aurora_custom_acts_v1') || '{}'); } catch(e) {}
+
+let _actTarget = null;
+let _ddMousedown = false;
+
+function actOnFocus(inp) {
+  _actTarget = inp;
+  _actRefreshDD(inp, inp.value);
+}
+function actOnInput(inp) {
+  _actTarget = inp;
+  inp.parentNode.dataset.val = inp.value;
+  _actRefreshDD(inp, inp.value);
+}
+function actOnBlur(inp) {
+  if (_ddMousedown) { _ddMousedown = false; return; }
+  _actHideDD();
+  const ni = +inp.dataset.ni, di = +inp.dataset.di, ai = +inp.dataset.ai;
+  const day = itinNodes[ni]?.days?.[di];
+  if (day) {
+    if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
+    day.acts[ai] = inp.value;
+    itinSaveToLS();
+  }
+}
+function actOnKeydown(e, inp) {
+  if (e.key === 'Enter')  { inp.blur(); return; }
+  if (e.key === 'Escape') { _actHideDD(); inp.blur(); return; }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    const first = document.querySelector('#act-dd .act-dd-item');
+    if (first) first.focus();
+  }
+}
+function _actRefreshDD(inp, q) {
+  const phase   = inp.dataset.phase || '';
+  const pool    = [...(ACT_POOL[phase] || []), ...(customActs[phase] || [])];
+  const lq      = (q || '').trim().toLowerCase();
+  const matched = lq ? pool.filter(s => s.toLowerCase().includes(lq)) : pool;
+
+  const dd = document.getElementById('act-dd');
+  if (!dd) return;
+  let html = matched.map(s =>
+    `<div class="act-dd-item" tabindex="-1"
+      onmousedown="event.preventDefault();_ddMousedown=true"
+      onclick="_actDDSelect(${JSON.stringify(s)})">${s}</div>`
+  ).join('');
+  if (q.trim() && !pool.map(s=>s.toLowerCase()).includes(q.trim().toLowerCase())) {
+    if (html) html += '<div class="act-dd-sep"></div>';
+    html += `<div class="act-dd-add"
+      onmousedown="event.preventDefault();_ddMousedown=true"
+      onclick="_actDDAdd(${JSON.stringify(q.trim())})">＋ 新增「${q.trim()}」到選單</div>`;
+  }
+  if (!html) { _actHideDD(); return; }
+  dd.innerHTML = html;
+  const rect = inp.getBoundingClientRect();
+  const w = Math.max(180, rect.width + 20);
+  dd.style.left   = Math.min(rect.left, window.innerWidth - w - 8) + 'px';
+  dd.style.top    = (rect.bottom + 3) + 'px';
+  dd.style.width  = w + 'px';
+  dd.style.display = 'block';
+}
+function _actHideDD() {
+  const dd = document.getElementById('act-dd');
+  if (dd) dd.style.display = 'none';
+}
+function _actDDSelect(val) {
+  if (!_actTarget) { _actHideDD(); return; }
+  _actTarget.value = val;
+  _actTarget.parentNode.dataset.val = val;
+  const ni = +_actTarget.dataset.ni, di = +_actTarget.dataset.di, ai = +_actTarget.dataset.ai;
+  const day = itinNodes[ni]?.days?.[di];
+  if (day) {
+    if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
+    day.acts[ai] = val;
+    itinSaveToLS();
+  }
+  _actHideDD();
+  _ddMousedown = false;
+}
+function _actDDAdd(val) {
+  if (!_actTarget) return;
+  const phase = _actTarget.dataset.phase || 'other';
+  if (!customActs[phase]) customActs[phase] = [];
+  if (!customActs[phase].includes(val)) {
+    customActs[phase].push(val);
+    try { localStorage.setItem('aurora_custom_acts_v1', JSON.stringify(customActs)); } catch(e) {}
+  }
+  _actDDSelect(val);
+}
+
 const ITIN_LS_KEY = 'aurora_itin_v1';
 const MEMO_LS_KEY = 'aurora_memo_v1';
 
@@ -2304,6 +2457,7 @@ function initItinBoard() {
   itinLoadFromLS();
   itinPush(); // baseline snapshot
   renderItinFlow();
+  document.addEventListener('scroll', _actHideDD, true);
   document.addEventListener('keydown', e => {
     const tag = document.activeElement?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
