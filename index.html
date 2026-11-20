@@ -2093,7 +2093,11 @@ function renderItinFlow() {
     /* ── LEFT column ── */
     let leftHtml = `<div class="ign-emoji">${node.emoji}</div>
       <input class="ign-name" value="${node.name.replace(/"/g,'&quot;')}"
-        onblur="itinSaveName(${i},this)" onkeydown="if(event.key==='Enter')this.blur()">
+        data-ni="${i}" data-type="locname"
+        oninput="actOnInput(this)"
+        onfocus="actOnFocus(this)"
+        onblur="actOnBlur(this)"
+        onkeydown="actOnKeydown(event,this)">
       <div class="ign-dates">${m.dateStr}</div>`;
     if (canAdj) {
       leftHtml += `<div class="ign-nights">
@@ -2360,6 +2364,15 @@ const HOTEL_POOL = {
   home:   [],
 };
 
+const LOC_POOL = [
+  '特羅姆瑟', '賽尼亞', '羅浮敦', '奧斯陸',
+  '博德 Bodø', 'Evenes (Harstad/Narvik)',
+  'Svolvær 斯沃爾韋爾', 'Reine 萊訥', 'Henningsvær',
+  'Narvik 納爾維克', 'Alta 阿爾塔',
+  'Bergen 卑爾根', 'Kirkenes 希爾克內斯',
+  '桃園', '杜拜轉機',
+];
+
 let customActs = {};
 try { customActs = JSON.parse(localStorage.getItem('aurora_custom_acts_v1') || '{}'); } catch(e) {}
 
@@ -2371,12 +2384,21 @@ function actOnFocus(inp) {
 }
 function actOnInput(inp) {
   _actTarget = inp;
-  if (inp.dataset.type !== 'hotel') inp.parentNode.dataset.val = inp.value;
+  const t = inp.dataset.type;
+  if (t !== 'hotel' && t !== 'locname') inp.parentNode.dataset.val = inp.value;
   _actRefreshDD(inp, inp.value);
 }
 function actOnBlur(inp) {
   _actHideDD();
-  const ni = +inp.dataset.ni, di = +inp.dataset.di;
+  const ni = +inp.dataset.ni;
+  if (inp.dataset.type === 'locname') {
+    const v = inp.value.trim();
+    if (!v) inp.value = itinNodes[ni]?.name || '';
+    else if (itinNodes[ni]) itinNodes[ni].name = v;
+    itinSaveToLS();
+    return;
+  }
+  const di = +inp.dataset.di;
   const day = itinNodes[ni]?.days?.[di];
   if (!day) return;
   if (inp.dataset.type === 'hotel') {
@@ -2399,11 +2421,15 @@ function actOnKeydown(e, inp) {
 }
 function _actRefreshDD(inp, q) {
   const phase   = inp.dataset.phase || '';
-  const isHotel = inp.dataset.type === 'hotel';
+  const dtype   = inp.dataset.type;
+  const isHotel = dtype === 'hotel';
+  const isLoc   = dtype === 'locname';
   const hkey    = 'hotel_' + phase;
-  const pool    = isHotel
-    ? [...(HOTEL_POOL[phase] || []), ...(customActs[hkey] || [])]
-    : [...(ACT_POOL[phase]   || []), ...(customActs[phase] || [])];
+  const pool    = isLoc
+    ? [...LOC_POOL, ...(customActs['locname'] || [])]
+    : isHotel
+      ? [...(HOTEL_POOL[phase] || []), ...(customActs[hkey] || [])]
+      : [...(ACT_POOL[phase]   || []), ...(customActs[phase] || [])];
   const lq      = (q || '').trim().toLowerCase();
   const matched = lq ? pool.filter(s => s.toLowerCase().includes(lq)) : pool;
 
@@ -2439,20 +2465,28 @@ function _actHideDD() {
 }
 function _actApply(val) {
   if (!_actTarget) return;
-  const isHotel = _actTarget.dataset.type === 'hotel';
+  const dtype   = _actTarget.dataset.type;
+  const isHotel = dtype === 'hotel';
+  const isLoc   = dtype === 'locname';
   _actTarget.value = val;
-  if (!isHotel) _actTarget.parentNode.dataset.val = val;
-  const ni = +_actTarget.dataset.ni, di = +_actTarget.dataset.di;
-  const day = itinNodes[ni]?.days?.[di];
-  if (day) {
-    if (isHotel) {
-      day.hotel = val;
-    } else {
-      const ai = +_actTarget.dataset.ai;
-      if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
-      day.acts[ai] = val;
-    }
+  if (!isHotel && !isLoc) _actTarget.parentNode.dataset.val = val;
+  const ni = +_actTarget.dataset.ni;
+  if (isLoc) {
+    if (itinNodes[ni]) itinNodes[ni].name = val;
     itinSaveToLS();
+  } else {
+    const di  = +_actTarget.dataset.di;
+    const day = itinNodes[ni]?.days?.[di];
+    if (day) {
+      if (isHotel) {
+        day.hotel = val;
+      } else {
+        const ai = +_actTarget.dataset.ai;
+        if (!Array.isArray(day.acts)) day.acts = [day.acts || ''];
+        day.acts[ai] = val;
+      }
+      itinSaveToLS();
+    }
   }
   _actHideDD();
   _actTarget.focus();
@@ -2465,7 +2499,8 @@ function _actDDClickAdd(el) {
   const val     = el.dataset.val || el.textContent.replace(/^＋.+「(.+)」.+/, '$1').trim();
   const phase   = _actTarget.dataset.phase || 'other';
   const isHotel = _actTarget.dataset.type === 'hotel';
-  const key     = isHotel ? 'hotel_' + phase : phase;
+  const isLoc2  = _actTarget.dataset.type === 'locname';
+  const key     = isLoc2 ? 'locname' : isHotel ? 'hotel_' + phase : phase;
   if (!customActs[key]) customActs[key] = [];
   if (!customActs[key].includes(val)) {
     customActs[key].push(val);
