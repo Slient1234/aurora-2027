@@ -1022,38 +1022,45 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       <div class="nqg-item"><div class="nqg-label">出發</div><div class="nqg-val">10/09</div></div>
       <div class="nqg-item"><div class="nqg-label">回程</div><div class="nqg-val">10/23</div></div>
       <div class="nqg-item"><div class="nqg-label">天數</div><div class="nqg-val">14 天</div></div>
-      <div class="nqg-item"><div class="nqg-label">人數</div><div class="nqg-val">2 人</div></div>
+      <div class="nqg-item"><div class="nqg-label">人數</div><div class="nqg-val">4 人</div></div>
     </div>
 
     <!-- 路線帶 -->
     <div class="no-route-strip">
-      🏙 Oslo <span class="nrs-nights">3晚</span>
-      <span class="nrs-arrow">→</span>
-      ✈ 國內班機
-      <span class="nrs-arrow">→</span>
-      🏔 Lofoten <span class="nrs-nights">4晚</span>
-      <span class="nrs-arrow">→</span>
-      ⛴ Hurtigruten <span class="nrs-nights">1晚</span>
-      <span class="nrs-arrow">→</span>
       🌌 Tromsø <span class="nrs-nights">5晚</span>
+      <span class="nrs-arrow">→</span>
+      🚗 自駕
+      <span class="nrs-arrow">→</span>
+      🏝 Senja <span class="nrs-nights">1晚</span>
+      <span class="nrs-arrow">→</span>
+      🏔 Lofoten <span class="nrs-nights">5晚</span>
+      <span class="nrs-arrow">→</span>
+      ✈ Evenes
+      <span class="nrs-arrow">→</span>
+      🏙 Oslo <span class="nrs-nights">2晚</span>
     </div>
 
     <!-- 分區快速卡 -->
     <div class="no-region-row">
-      <div class="nor-card" onclick="nav('norway')">
-        <div class="nor-emoji">🏙</div>
-        <div class="nor-name">奧斯陸</div>
-        <div class="nor-sub">Day 1–3 · 城市 & 文化</div>
-      </div>
-      <div class="nor-card" onclick="nav('norway')">
-        <div class="nor-emoji">🏔</div>
-        <div class="nor-name">羅浮敦</div>
-        <div class="nor-sub">Day 4–7 · 峽灣漁村</div>
-      </div>
-      <div class="nor-card" onclick="nav('norway')">
+      <div class="nor-card" onclick="scrollToSection('sec-activities')">
         <div class="nor-emoji">🌌</div>
         <div class="nor-name">特羅姆瑟</div>
-        <div class="nor-sub">Day 8–13 · 極光核心</div>
+        <div class="nor-sub">D1–5 · 5晚 · 極光核心</div>
+      </div>
+      <div class="nor-card" onclick="scrollToSection('sec-activities')">
+        <div class="nor-emoji">🏝</div>
+        <div class="nor-name">賽尼亞</div>
+        <div class="nor-sub">D6 · 1晚 · 自駕中繼</div>
+      </div>
+      <div class="nor-card" onclick="scrollToSection('sec-activities')">
+        <div class="nor-emoji">🏔</div>
+        <div class="nor-name">羅浮敦</div>
+        <div class="nor-sub">D7–11 · 5晚 · 峽灣漁村</div>
+      </div>
+      <div class="nor-card" onclick="scrollToSection('sec-activities')">
+        <div class="nor-emoji">🏙</div>
+        <div class="nor-name">奧斯陸</div>
+        <div class="nor-sub">D12–13 · 2晚 · 城市收尾</div>
       </div>
     </div>
 
@@ -1063,7 +1070,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       <div class="map-cta-icon">🗺</div>
       <div>
         <div class="map-cta-title">互動路線地圖</div>
-        <div class="map-cta-sub">奧斯陸 → 羅浮敦 → 特羅姆瑟 · 可新增城市 · 查看景點美食</div>
+        <div class="map-cta-sub">特羅姆瑟 → 賽尼亞 → 羅浮敦 → 奧斯陸 · 可新增城市 · 查看景點美食</div>
       </div>
       <div class="map-cta-arrow">→</div>
     </div>
@@ -1077,54 +1084,48 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 
     <!-- 15天可行性 -->
     <div class="feasibility">
-      <div class="fea-title">📐 15 天可行性分析</div>
+      <div class="fea-title">📐 14 天行程分佈（確認版）</div>
       <div class="fea-row">
-        <div class="fea-label"><span>奧斯陸 Oslo（城市）</span><span style="color:var(--no)">3晚</span></div>
-        <div class="fea-bar"><div class="fea-fill" style="width:20%"></div></div>
+        <div class="fea-label"><span>特羅姆瑟 Tromsø（極光核心）</span><span style="color:var(--no)">5晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:33%"></div></div>
       </div>
       <div class="fea-row">
-        <div class="fea-label"><span>羅浮敦 Lofoten（峽灣）</span><span style="color:var(--no)">3晚</span></div>
-        <div class="fea-bar"><div class="fea-fill" style="width:20%"></div></div>
+        <div class="fea-label"><span>賽尼亞 Senja（自駕中繼）</span><span style="color:var(--no)">1晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:7%"></div></div>
       </div>
       <div class="fea-row">
-        <div class="fea-label"><span>特羅姆瑟 Tromsø（極光）</span><span style="color:var(--no)">4晚</span></div>
-        <div class="fea-bar"><div class="fea-fill" style="width:27%"></div></div>
+        <div class="fea-label"><span>羅浮敦 Lofoten（峽灣漁村）</span><span style="color:var(--no)">5晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:33%"></div></div>
       </div>
       <div class="fea-row">
-        <div class="fea-label"><span>移動天數（飛機 + 郵輪）</span><span style="color:var(--muted)">2–3天</span></div>
-        <div class="fea-bar"><div class="fea-fill" style="width:16%;background:var(--muted2)"></div></div>
+        <div class="fea-label"><span>奧斯陸 Oslo（城市收尾）</span><span style="color:var(--no)">2晚</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:13%"></div></div>
+      </div>
+      <div class="fea-row">
+        <div class="fea-label"><span>移動／交通日</span><span style="color:var(--muted)">2天</span></div>
+        <div class="fea-bar"><div class="fea-fill" style="width:13%;background:var(--muted2)"></div></div>
       </div>
       <div style="margin-top:10px;padding:10px 12px;background:var(--no-bg);border-radius:8px;font-size:12px;color:var(--sub);border:1px solid var(--no-border)">
-        <strong style="color:var(--no)">結論：15天可行，略緊。</strong>
-        Oslo + Lofoten + Tromsø 三段合計 10 個在地晚數 + 2–3 天移動，剛好填滿 14–15 天。不建議再加第四個據點。
+        <strong style="color:var(--no)">確認路線：TOS飛進 → 自駕賽尼亞+羅浮敦 → EVE飛奧斯陸 → OSL飛回。</strong>
+        10/14取車 Tromsø Airport → 10/20 Evenes 還車，共 6 天自駕。
       </div>
     </div>
 
     <!-- 路線方案 -->
     <div class="ana-block">
-      <div class="ana-head">🗺 路線方案</div>
+      <div class="ana-head">🗺 確認路線</div>
       <div class="ana-body">
         <div class="route-card">
-          <div class="route-title">方案 A — 三段北上 <span class="route-tag rec">推薦</span></div>
+          <div class="route-title">✅ 確認方案 — TOS飛進 · 自駕 · EVE→OSL飛出 <span class="route-tag rec">已確認</span></div>
           <div class="route-flow">
-            <div class="rf-node">桃園</div><div class="rf-arr">✈</div>
-            <div class="rf-node">奧斯陸 3晚</div><div class="rf-arr">✈</div>
-            <div class="rf-node">羅浮敦 3晚</div><div class="rf-arr">🚢夜船</div>
-            <div class="rf-node">特羅姆瑟 4晚</div><div class="rf-arr">✈</div>
+            <div class="rf-node">桃園</div><div class="rf-arr">✈EK387+159</div>
+            <div class="rf-node">特羅姆瑟 5晚</div><div class="rf-arr">🚗取車</div>
+            <div class="rf-node">賽尼亞 1晚</div><div class="rf-arr">🚗</div>
+            <div class="rf-node">羅浮敦 5晚</div><div class="rf-arr">✈EVE→OSL</div>
+            <div class="rf-node">奧斯陸 2晚</div><div class="rf-arr">✈EK160</div>
             <div class="rf-node">桃園</div>
           </div>
-          <div class="route-note">不走回頭路，地理動線最順（南→北）。Lofoten→Tromsø 夜船省一晚住宿、甲板看極光。Emirates OSL 進出，國內線另購。</div>
-        </div>
-        <div class="route-card">
-          <div class="route-title">方案 B — 全程飛機 <span class="route-tag alt">備選</span></div>
-          <div class="route-flow">
-            <div class="rf-node">桃園</div><div class="rf-arr">✈</div>
-            <div class="rf-node">奧斯陸 3晚</div><div class="rf-arr">✈</div>
-            <div class="rf-node">羅浮敦 3晚</div><div class="rf-arr">✈轉機</div>
-            <div class="rf-node">特羅姆瑟 4晚</div><div class="rf-arr">✈</div>
-            <div class="rf-node">桃園</div>
-          </div>
-          <div class="route-note">Lofoten → Bodø → Tromsø 轉機，約 4–5 小時。省郵輪費但少夜船體驗，適合不想在船上過夜的人。</div>
+          <div class="route-note">EK387+EK159+SK4418 飛抵 Tromsø 10/9。10/14 Tromsø Airport 取車自駕 6 天。10/20 Evenes(EVE) 還車飛 Oslo，2 晚後 10/22 EK160 返台。</div>
         </div>
       </div>
     </div>
@@ -1137,7 +1138,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 
         <!-- 去程 -->
         <div style="margin-bottom:12px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">去程 · 2027/10/09（六）· 總飛行 18h 05m</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">去程 · 2027/10/09（六）· TPE → TOS</div>
           <div style="display:flex;flex-direction:column;gap:6px">
             <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
               <span style="font-size:16px">✈</span>
@@ -1157,13 +1158,24 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
                 <div style="color:var(--muted);font-size:11px">杜拜 DXB → 奧斯陸 OSL</div>
               </div>
               <div style="text-align:right;font-size:11px">
-                <div style="font-weight:700">12:35</div>
+                <div style="font-weight:700"></div>
+                <div style="color:var(--muted)">10/9 轉機</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
+              <span style="font-size:16px">🛫</span>
+              <div style="flex:1">
+                <div style="font-weight:700">SK4418 &nbsp;<span style="font-weight:400;color:var(--muted)">北歐航空</span></div>
+                <div style="color:var(--muted);font-size:11px">奧斯陸 OSL → 特羅姆瑟 TOS · 國內線另購</div>
+              </div>
+              <div style="text-align:right;font-size:11px">
+                <div style="font-weight:700">16:20</div>
                 <div style="color:var(--muted)">10/9 抵達</div>
               </div>
             </div>
           </div>
           <div style="margin-top:6px;font-size:11px;color:var(--muted);padding:5px 10px;background:var(--surface2);border-radius:6px">
-            經濟艙最低 <strong>TWD 18,973</strong> 起 · 豪華經濟（彈性加值）<strong>TWD 28,705</strong> 起（單程/人）
+            豪華經濟（Emirates 確認票價）<strong>TWD 68,800 / 人</strong>（來回含國內線）
           </div>
         </div>
 
@@ -1171,14 +1183,14 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
 
         <!-- 回程 -->
         <div style="margin-bottom:12px">
-          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">回程 · 2027/10/22（五）出發 → 10/23（六）抵台 · 總飛行 19h 40m</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">回程 · 10/20 EVE→OSL · 10/22 OSL→TPE</div>
           <div style="display:flex;flex-direction:column;gap:6px">
             <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fef9ec;border:1px solid #fde68a;border-radius:8px;font-size:12px">
               <span style="font-size:16px">🛫</span>
               <div style="flex:1">
-                <div style="font-weight:700;color:#92400e">國內線 TOS → OSL &nbsp;<span style="font-weight:400;color:var(--muted)">另購 · 北歐航空 SAS 或挪威穿梭航空 Norwegian</span></div>
-                <div style="color:var(--muted);font-size:11px">特羅姆瑟 → 奧斯陸 · 約 1h50m · 須於 10/22 早上抵達 OSL 趕 EK160 14:35</div>
-                <div style="margin-top:4px;font-size:11px;font-weight:700;color:#92400e">約 TWD 3,000–4,000 / 人</div>
+                <div style="font-weight:700;color:#92400e">國內線 EVE → OSL &nbsp;<span style="font-weight:400;color:var(--muted)">另購 · Norwegian 或 SAS</span></div>
+                <div style="color:var(--muted);font-size:11px">Evenes(Harstad/Narvik) → 奧斯陸 · 10/20 還車後搭乘 · 2晚後趕 EK160</div>
+                <div style="margin-top:4px;font-size:11px;font-weight:700;color:#92400e">約 TWD 3,000–5,000 / 人</div>
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
@@ -1195,7 +1207,7 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
             <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:8px;font-size:12px">
               <span style="font-size:16px">✈</span>
               <div style="flex:1">
-                <div style="font-weight:700">EK366 &nbsp;<span style="font-weight:400;color:var(--muted)">A380</span></div>
+                <div style="font-weight:700">EK386 &nbsp;<span style="font-weight:400;color:var(--muted)">A380</span></div>
                 <div style="color:var(--muted);font-size:11px">杜拜 DXB → 台北 TPE</div>
               </div>
               <div style="text-align:right;font-size:11px">
@@ -1204,80 +1216,44 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
               </div>
             </div>
           </div>
-          <div style="margin-top:6px;font-size:11px;color:var(--muted);padding:5px 10px;background:var(--surface2);border-radius:6px">
-            經濟艙最低 <strong>TWD 17,574</strong> 起 · 豪華經濟（彈性加值）<strong>TWD 29,124</strong> 起（單程/人）
-          </div>
         </div>
 
         <div style="height:1px;background:var(--border);margin-bottom:12px"></div>
 
-        <!-- 票種比較：豪經為主 -->
+        <!-- 費用試算 -->
         <div>
-          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">費用試算（豪華經濟 · 彈性加值 · 2人）</div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">費用試算（豪華經濟 · 確認票價 · 4人）</div>
 
-          <!-- 主卡：豪經彈性加值 -->
+          <!-- 主卡：確認票價 -->
           <div style="padding:14px 16px;border:2px solid var(--no);border-radius:10px;background:var(--no-bg);margin-bottom:10px">
             <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
-              <span style="font-size:22px;font-weight:900;color:var(--no)">29,124</span>
-              <span style="font-size:12px;color:var(--muted)">TWD / 人 / 單程（回程）</span>
-              <span style="margin-left:auto;background:var(--no);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px">規劃基準</span>
+              <span style="font-size:22px;font-weight:900;color:var(--no)">68,800</span>
+              <span style="font-size:12px;color:var(--muted)">TWD / 人（來回 Emirates 確認）</span>
+              <span style="margin-left:auto;background:var(--no);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px">已確認</span>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;margin-bottom:8px">
-              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">✅ 免改票・免退票</div>
+              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">✅ 豪華經濟艙</div>
               <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">🧳 35kg 行李</div>
-              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">💺 豪華經濟艙</div>
+              <div style="background:rgba(255,255,255,0.5);border-radius:6px;padding:6px 8px">✈ Open-jaw TOS/OSL</div>
             </div>
-            <div style="font-size:11px;color:var(--sub)">💡 符合 <strong>48,000 Skywards 哩程</strong>升等商務艙資格</div>
           </div>
 
-          <!-- 兩人總計 -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+          <!-- 四人總計 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
             <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-              <div style="color:var(--muted);margin-bottom:3px">去程 2人</div>
-              <div style="font-weight:900;font-size:16px;color:var(--no)">57,410</div>
-              <div style="color:var(--muted2);font-size:10px">TWD（×2人）</div>
-            </div>
-            <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
-              <div style="color:var(--muted);margin-bottom:3px">回程 2人</div>
-              <div style="font-weight:900;font-size:16px;color:var(--no)">58,248</div>
-              <div style="color:var(--muted2);font-size:10px">TWD（×2人）</div>
+              <div style="color:var(--muted);margin-bottom:3px">Emirates 機票 · 人/人</div>
+              <div style="font-weight:900;font-size:16px;color:var(--no)">68,800</div>
+              <div style="color:var(--muted2);font-size:10px">TWD / 人（來回）</div>
             </div>
             <div style="padding:10px;border:2px solid var(--no);border-radius:8px;font-size:11px;text-align:center;background:var(--no-bg)">
-              <div style="color:var(--no);font-weight:700;margin-bottom:3px">機票合計（含國內線）</div>
-              <div style="font-weight:900;font-size:16px;color:var(--no)">~122,000</div>
-              <div style="color:var(--muted2);font-size:10px">TWD · 2人</div>
+              <div style="color:var(--no);font-weight:700;margin-bottom:3px">機票合計（4人）</div>
+              <div style="font-weight:900;font-size:16px;color:var(--no)">275,200</div>
+              <div style="color:var(--muted2);font-size:10px">TWD · 4人（不含 EVE→OSL 國內線）</div>
             </div>
           </div>
 
-          <!-- 其他票種參考 -->
-          <details style="font-size:11px">
-            <summary style="cursor:pointer;color:var(--muted);padding:4px 0">其他艙等參考（單程/人）▾</summary>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px">
-              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
-                <div style="color:var(--muted);font-size:10px">經濟優惠</div>
-                <div style="font-weight:700">18,973</div>
-                <div style="color:var(--muted2);font-size:10px">25kg</div>
-              </div>
-              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
-                <div style="color:var(--muted);font-size:10px">經濟彈性</div>
-                <div style="font-weight:700">17,574</div>
-                <div style="color:var(--muted2);font-size:10px">回程起（30kg）</div>
-              </div>
-              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
-                <div style="color:var(--muted);font-size:10px">商務艙</div>
-                <div style="font-weight:700">71,081</div>
-                <div style="color:var(--muted2);font-size:10px">回程起</div>
-              </div>
-              <div style="padding:7px;border:1px solid var(--border);border-radius:7px;text-align:center">
-                <div style="color:var(--muted);font-size:10px">頭等艙</div>
-                <div style="font-weight:700">113,922</div>
-                <div style="color:var(--muted2);font-size:10px">回程起</div>
-              </div>
-            </div>
-          </details>
-
           <div style="margin-top:10px;font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px;line-height:1.7">
-            💡 去程 TWD 28,705、回程 TWD 29,124 均為豪華經濟彈性加值查詢值（非即時票價，以下單時為準）。<strong>Open-jaw（OSL進/TOS出）訂法需向 Emirates 確認可否一張票涵蓋</strong>。TOS→OSL 國內線（SAS 或 Norwegian）約 TWD 3,000–4,000/人，另行購買。
+            💡 TWD 68,800/人為豪華經濟艙確認查詢值。Open-jaw：TOS飛進 / OSL飛出。<strong>EVE→OSL 國內線（Norwegian 或 SAS）約 TWD 3,000–5,000/人，另行購買</strong>（10/20 還車後當天飛 Oslo）。
           </div>
         </div>
 
@@ -1296,9 +1272,9 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
         <span class="region-head-flag">🏙</span>
         <div class="region-head-info">
           <div class="region-head-name">奧斯陸 Oslo</div>
-          <div class="region-head-sub">Day 1–3 · 城市文化 · 59°N</div>
+          <div class="region-head-sub">D12–13 · 城市收尾 · 59°N</div>
         </div>
-        <span class="region-nights">3 晚</span>
+        <span class="region-nights">2 晚</span>
       </div>
 
       <div class="act-row">
@@ -1378,9 +1354,9 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
         <span class="region-head-flag">🏔</span>
         <div class="region-head-info">
           <div class="region-head-name">羅浮敦群島 Lofoten</div>
-          <div class="region-head-sub">Day 4–6 · 峽灣漁村 · 68°N 北極圈內</div>
+          <div class="region-head-sub">D7–11 · 峽灣漁村 · 68°N 北極圈內</div>
         </div>
-        <span class="region-nights">3 晚</span>
+        <span class="region-nights">5 晚</span>
       </div>
 
       <div class="act-row">
@@ -1452,9 +1428,9 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
         <span class="region-head-flag">🌌</span>
         <div class="region-head-info">
           <div class="region-head-name">特羅姆瑟 Tromsø</div>
-          <div class="region-head-sub">Day 7–10 · 北極首都 · 極光核心基地 · 69°N</div>
+          <div class="region-head-sub">D1–5 · 北極首都 · 極光核心基地 · 69°N</div>
         </div>
-        <span class="region-nights">4 晚</span>
+        <span class="region-nights">5 晚</span>
       </div>
 
       <div class="act-row">
@@ -1721,6 +1697,59 @@ body.mv-adding-mode #mv-map { cursor: crosshair !important; }
       </div>
     </div>
 
+    <!-- 租車資訊 -->
+    <div class="ana-block" style="margin-bottom:14px">
+      <div class="ana-head">🚗 租車規劃（確認）</div>
+      <div class="ana-body" style="padding:12px 14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px">
+            <div style="color:var(--muted);margin-bottom:3px">📍 取車</div>
+            <div style="font-weight:700">Tromsø Airport (TOS)</div>
+            <div style="color:var(--muted2)">10/14（週一）中午</div>
+          </div>
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px">
+            <div style="color:var(--muted);margin-bottom:3px">📍 還車</div>
+            <div style="font-weight:700">Evenes Airport (EVE)</div>
+            <div style="color:var(--muted2)">10/20（週一）上午</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:3px">租期</div>
+            <div style="font-weight:900;font-size:16px;color:var(--no)">6</div>
+            <div style="color:var(--muted2)">天</div>
+          </div>
+          <div style="padding:10px;border:1px solid var(--border);border-radius:8px;font-size:11px;text-align:center">
+            <div style="color:var(--muted);margin-bottom:3px">估算費用</div>
+            <div style="font-weight:900;font-size:16px;color:var(--no)">~94,000</div>
+            <div style="color:var(--muted2)">TWD 總計</div>
+          </div>
+          <div style="padding:10px;border:2px solid var(--no);border-radius:8px;font-size:11px;text-align:center;background:var(--no-bg)">
+            <div style="color:var(--no);font-weight:700;margin-bottom:3px">4人分攤</div>
+            <div style="font-weight:900;font-size:16px;color:var(--no)">~23,500</div>
+            <div style="color:var(--muted2)">TWD / 人</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;font-size:11px">
+          <div style="display:flex;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:6px">
+            <span style="color:var(--muted)">車型</span><span style="font-weight:700">Toyota RAV4（汽油）Hertz</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:6px">
+            <span style="color:var(--muted)">甲租乙還費</span><span style="font-weight:700">NOK 4,600（已含入估算）</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:6px">
+            <span style="color:var(--muted)">自駕路線</span><span style="font-weight:700">TOS → E6南下 → E10羅浮敦 → EVE</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:5px 10px;background:var(--surface2);border-radius:6px">
+            <span style="color:var(--muted)">總里程估算</span><span style="font-weight:700">~700–800 km</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted2);padding:7px 10px;background:var(--surface2);border-radius:7px;line-height:1.7">
+          💡 EVE 為 Harstad/Narvik Airport，直飛奧斯陸（Norwegian/SAS）。E10 與 E6 交會點在 Bjerkvik，Evenes 在 Bjerkvik 以北約 50km，動線自然不走回頭路。建議汽油車而非 EV，10 月北挪威冷天氣會損失 20–40% 電池續航。
+        </div>
+      </div>
+    </div>
+
     <!-- 備忘錄 -->
 <section id="sec-memo"></section>
     <div class="memo-section" id="memo-wrap">
@@ -1893,10 +1922,11 @@ document.addEventListener('DOMContentLoaded', () => {
 ══════════════════════════════════════ */
 const ITIN_PH = {
   travel:  { label:'出發',         color:'#64748b' },
-  oslo:    { label:'奧斯陸',       color:'#8b5cf6' },
-  lofoten: { label:'羅浮敦',       color:'#0ea5e9' },
-  ship:    { label:'Hurtigruten',  color:'#06b6d4' },
   tromso:  { label:'特羅姆瑟',     color:'#f59e0b' },
+  senja:   { label:'賽尼亞',       color:'#06b6d4' },
+  lofoten: { label:'羅浮敦',       color:'#0ea5e9' },
+  oslo:    { label:'奧斯陸',       color:'#8b5cf6' },
+  ship:    { label:'Hurtigruten',  color:'#64748b' },
   home:    { label:'返程',         color:'#10b981' },
 };
 const ITIN_CT = [
@@ -1937,41 +1967,44 @@ function itinRedo() {
 
 let itinNodes = [
   { emoji:'🛫', name:'桃園', nights:0, phase:'travel', fixed:true,
-    days:[{acts:['EK387 00:30 出發'], hotel:''}]},
-  { emoji:'🏙', name:'奧斯陸', nights:2, phase:'oslo',
-    days:[
-      {acts:['抵 Oslo 12:35','市區散步'], hotel:''},
-      {acts:['Vigeland 公園','博物館','浮式桑拿'], hotel:''},
-    ]},
-  { emoji:'🏔', name:'羅浮敦', nights:4, phase:'lofoten',
-    days:[
-      {acts:['飛 Svolvær','Henningsvær 漫步'], hotel:''},
-      {acts:['E10 南下','抵 Reine'], hotel:''},
-      {acts:['Reinebringen 健行'], hotel:''},
-      {acts:['Å 來回','漁村探索'], hotel:''},
-    ]},
-  { emoji:'🚢', name:'Hurtigruten', nights:1, phase:'ship',
-    days:[{acts:['Hamnøy 晨景','開回 Svolvær','傍晚登船'], hotel:''}]},
+    days:[{acts:['EK387 00:30 出發','EK159 DXB→OSL','SK4418 OSL→TOS'], hotel:''}]},
   { emoji:'🌌', name:'特羅姆瑟', nights:5, phase:'tromso',
     days:[
-      {acts:['傍晚抵 Tromsø','極光 Tour 初夜'], hotel:''},
+      {acts:['16:20 抵 Tromsø','安頓住宿'], hotel:''},
+      {acts:['北極大教堂','Arctic Botanical Garden'], hotel:''},
+      {acts:['Fjellheisen 纜車','極光 Tour'], hotel:''},
       {acts:['Lyngen Alps 冰川健行'], hotel:''},
-      {acts:['北極大教堂','Fjellheisen 纜車'], hotel:''},
-      {acts:['極光遊輪','備用日'], hotel:''},
-      {acts:['整理行李','最後極光夜'], hotel:''},
+      {acts:['市區漫步','準備取車出發'], hotel:''},
+    ]},
+  { emoji:'🏝', name:'賽尼亞', nights:1, phase:'senja',
+    days:[
+      {acts:['取車 Tromsø Airport','Tungeneset 海角','Bergsbotn 觀景台'], hotel:''},
+    ]},
+  { emoji:'🏔', name:'羅浮敦', nights:5, phase:'lofoten',
+    days:[
+      {acts:['Senja → Svolvær','Henningsvær 漫步'], hotel:''},
+      {acts:['Kabelvåg 教堂','Stamsund 漁村'], hotel:''},
+      {acts:['Nusfjord 漁村','Reine 峽灣'], hotel:''},
+      {acts:['Reinebringen 健行','Hamnøy 晨景'], hotel:''},
+      {acts:['Å 最西端','極光備用夜'], hotel:''},
+    ]},
+  { emoji:'🏙', name:'奧斯陸', nights:2, phase:'oslo',
+    days:[
+      {acts:['EVE→OSL 飛機','抵 Oslo 傍晚','Aker Brygge 碼頭'], hotel:''},
+      {acts:['Vigeland 公園','孟克美術館','浮式桑拿'], hotel:''},
     ]},
   { emoji:'🏠', name:'返程', nights:0, phase:'home', fixed:true,
     days:[
-      {acts:['TOS → OSL','EK160 14:35 出發'], hotel:''},
+      {acts:['EK160 14:35 OSL 出發'], hotel:''},
       {acts:['抵台 16:15 🎉'], hotel:''},
     ]},
 ];
 let itinEdges = [
-  { type:'flight', time:'14h · EK387+159' },
-  { type:'flight', time:'2h · OSL→SVJ'   },
-  { type:'drive',  time:'2.5h 回 Svolvær' },
-  { type:'ship',   time:'~20h Hurtigruten'},
-  { type:'flight', time:'2h · TOS→OSL'   },
+  { type:'flight', time:'18h · EK387+159+SK4418' },
+  { type:'drive',  time:'2.5h TOS→Senja'          },
+  { type:'drive',  time:'4h Senja→Lofoten'         },
+  { type:'flight', time:'2h · EVE→OSL'             },
+  { type:'flight', time:'EK160+386'                },
 ];
 
 function itinNodeDays(n) {
